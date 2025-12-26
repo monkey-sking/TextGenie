@@ -1,0 +1,203 @@
+{
+    "name": {
+        "en": "TextGenie",
+        "zh-Hans": "文灵"
+    },
+    "identifier": "com.popclip.extension.textgenie",
+    "description": {
+        "en": "Magical text assistant",
+        "zh-Hans": "魔法文本助手"
+    },
+    "icon": "icon.svg",
+    "popclipVersion": 4586,
+    "entitlements": [
+        "network"
+    ],
+    "options": [
+        {
+            "identifier": "translationService",
+            "label": {
+                "en": "Translation Service",
+                "zh-Hans": "翻译服务"
+            },
+            "type": "multiple",
+            "values": [
+                "google",
+                "deepl",
+                "openai",
+                "gemini",
+                "custom",
+                "bob",
+                "eudic"
+            ],
+            "valueLabels": [
+                "🌐 Google",
+                "🔷 DeepL",
+                "🤖 OpenAI",
+                "✨ Gemini",
+                "⚙️ Custom",
+                "📖 Bob",
+                "📚 Eudic"
+            ],
+            "defaultValue": "google"
+        },
+        {
+            "identifier": "targetLanguage",
+            "label": {
+                "en": "Translation Target",
+                "zh-Hans": "翻译目标语言"
+            },
+            "type": "multiple",
+            "values": [
+                "auto",
+                "zh-CN",
+                "en",
+                "ja",
+                "ko",
+                "fr",
+                "de",
+                "es",
+                "ru"
+            ],
+            "valueLabels": [
+                "🔄 Auto",
+                "🇨🇳 中文",
+                "🇺🇸 English",
+                "🇯🇵 日本語",
+                "🇰🇷 한국어",
+                "🇫🇷 Français",
+                "🇩🇪 Deutsch",
+                "🇪🇸 Español",
+                "🇷🇺 Русский"
+            ],
+            "defaultValue": "auto"
+        },
+        {
+            "identifier": "apiKey",
+            "label": {
+                "en": "API Key",
+                "zh-Hans": "API 密钥"
+            },
+            "type": "string",
+            "description": {
+                "en": "Required for DeepL/OpenAI/Gemini",
+                "zh-Hans": "DeepL/OpenAI/Gemini 需要"
+            }
+        },
+        {
+            "identifier": "customApiUrl",
+            "label": {
+                "en": "Custom API URL",
+                "zh-Hans": "自定义 API 地址"
+            },
+            "type": "string"
+        },
+        {
+            "identifier": "customModel",
+            "label": {
+                "en": "Custom Model",
+                "zh-Hans": "自定义模型"
+            },
+            "type": "string"
+        },
+        {
+            "identifier": "customPrompt",
+            "label": {
+                "en": "Custom Prompt",
+                "zh-Hans": "自定义提示词"
+            },
+            "type": "string"
+        },
+        {
+            "identifier": "targetCurrency",
+            "label": {
+                "en": "Target Currency",
+                "zh-Hans": "目标货币"
+            },
+            "type": "multiple",
+            "values": [
+                "CNY",
+                "USD",
+                "EUR",
+                "GBP",
+                "JPY",
+                "HKD",
+                "KRW",
+                "TWD"
+            ],
+            "valueLabels": [
+                "¥ CNY",
+                "$ USD",
+                "€ EUR",
+                "£ GBP",
+                "¥ JPY",
+                "HK$ HKD",
+                "₩ KRW",
+                "NT$ TWD"
+            ],
+            "defaultValue": "CNY"
+        },
+        {
+            "identifier": "pureNumberMode",
+            "label": {
+                "en": "Pure Number Handling",
+                "zh-Hans": "纯数字处理"
+            },
+            "type": "multiple",
+            "values": [
+                "currency",
+                "translate"
+            ],
+            "valueLabels": [
+                {
+                    "en": "As Currency",
+                    "zh-Hans": "视为货币"
+                },
+                {
+                    "en": "As Text",
+                    "zh-Hans": "视为文本"
+                }
+            ],
+            "defaultValue": "currency"
+        },
+        {
+            "identifier": "openUrls",
+            "label": {
+                "en": "Open URLs",
+                "zh-Hans": "打开网址"
+            },
+            "type": "boolean",
+            "defaultValue": true
+        }
+    ],
+    "actions": [
+        {
+            "title": {
+                "en": "Open URL",
+                "zh-Hans": "打开网址"
+            },
+            "icon": "url.png",
+            "javascript file": "url.js",
+            "regular expression": "(?i)^(https?://|www\\.|[a-z0-9-]+\\.[a-z]{2,}(/.*)?$|(\\d{1,3}\\.){3}\\d{1,3}(:\\d+)?(/.*)?$|localhost(:\\d+)?(/.*)?$)"
+        },
+        {
+            "title": {
+                "en": "Convert",
+                "zh-Hans": "汇率转换"
+            },
+            "icon": "currency.png",
+            "javascript file": "currency.js",
+            "after": "preview-result",
+            "regular expression": "(?i).*([$¥€£₹₩₽฿]|USD|CNY|EUR|GBP|JPY|HKD|KRW|TWD|SGD|AUD|CAD|CHF|THB|INR|RUB|元|币|镑|法郎|铢|卢|円).*"
+        },
+        {
+            "title": {
+                "en": "TextGenie",
+                "zh-Hans": "文灵"
+            },
+            "icon": "translate.png",
+            "javascript file": "main.js",
+            "after": "preview-result"
+        }
+    ]
+}
