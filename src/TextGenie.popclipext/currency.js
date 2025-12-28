@@ -1,10 +1,11 @@
 // PopClip Currency Converter
 const axios = require('axios');
+
 const text = popclip.input.text.trim();
 const targetCurrency = popclip.options.targetCurrency || 'CNY';
 const targetLanguage = popclip.options.targetLanguage || 'auto';
 
-const CURRENCY_CODES = ['USD', 'EUR', 'GBP', 'JPY', 'CNY', 'HKD', 'AUD', 'CAD', 'CHF', 'SGD', 'NZD', 'INR', 'KRW', 'THB', 'MYR', 'RUB', 'TWD'];
+// ============ Currency Constants (Precompiled) ============
 const CN_CURRENCY_NAMES = {
     '人民币': 'CNY', '美元': 'USD', '美金': 'USD', '欧元': 'EUR', '英镑': 'GBP',
     '日元': 'JPY', '日币': 'JPY', '港币': 'HKD', '港元': 'HKD', '韩元': 'KRW',
@@ -13,41 +14,56 @@ const CN_CURRENCY_NAMES = {
     '瑞士法郎': 'CHF', '瑞郎': 'CHF', '泰铢': 'THB', '卢比': 'INR', '卢布': 'RUB'
 };
 
+const CURRENCY_SYMBOLS = {
+    '$': 'USD', '¥': 'CNY', '€': 'EUR', '£': 'GBP',
+    '₹': 'INR', '₩': 'KRW', '₽': 'RUB', '฿': 'THB'
+};
+
+const CN_NAMES = {
+    CNY: '人民币', USD: '美元', EUR: '欧元', GBP: '英镑', JPY: '日元',
+    HKD: '港币', KRW: '韩元', TWD: '台币', SGD: '新加坡元',
+    AUD: '澳元', CAD: '加元', CHF: '瑞郎', THB: '泰铢', INR: '卢比', RUB: '卢布'
+};
+
+// Precompiled regex patterns
+const CODES_PATTERN = 'USD|EUR|GBP|JPY|CNY|HKD|AUD|CAD|CHF|SGD|NZD|INR|KRW|THB|MYR|RUB|TWD';
+const RE_CODE_AFTER_NUM = new RegExp(`(\\d+\\.?\\d*)\\s*(${CODES_PATTERN})`, 'i');
+const RE_CODE_BEFORE_NUM = new RegExp(`(${CODES_PATTERN})\\s*(\\d+\\.?\\d*)`, 'i');
+const RE_NUMBER = /(\d+\.?\d*)/;
+
 function parseCurrency(t) {
     const cleaned = t.replace(/,/g, '');
+    const numMatch = cleaned.match(RE_NUMBER);
+    if (!numMatch) throw new Error('Could not parse currency');
+    const amount = parseFloat(numMatch[1]);
+
     for (const [name, code] of Object.entries(CN_CURRENCY_NAMES)) {
-        if (cleaned.includes(name)) {
-            const numMatch = cleaned.match(/(\d+\.?\d*)/);
-            if (numMatch) return { amount: parseFloat(numMatch[1]), currency: code };
-        }
+        if (cleaned.includes(name)) return { amount, currency: code };
     }
-    let match = cleaned.match(/(\d+\.?\d*)\s*([A-Z]{3})/i);
+
+    let match = cleaned.match(RE_CODE_AFTER_NUM);
     if (match) return { amount: parseFloat(match[1]), currency: match[2].toUpperCase() };
-    match = cleaned.match(/([A-Z]{3})\s*(\d+\.?\d*)/i);
+    match = cleaned.match(RE_CODE_BEFORE_NUM);
     if (match) return { amount: parseFloat(match[2]), currency: match[1].toUpperCase() };
 
-    const symbols = { '$': 'USD', '¥': 'CNY', '€': 'EUR', '£': 'GBP', '₹': 'INR', '₩': 'KRW', '₽': 'RUB', '฿': 'THB' };
-    for (const [sym, code] of Object.entries(symbols)) {
-        if (cleaned.includes(sym)) {
-            const numMatch = cleaned.match(/(\d+\.?\d*)/);
-            if (numMatch) return { amount: parseFloat(numMatch[1]), currency: code };
-        }
+    for (const [sym, code] of Object.entries(CURRENCY_SYMBOLS)) {
+        if (cleaned.includes(sym)) return { amount, currency: code };
     }
-    const numMatch = cleaned.match(/(\d+\.?\d*)/);
-    if (numMatch) return { amount: parseFloat(numMatch[1]), currency: null };
-    throw new Error('Could not parse currency');
+
+    return { amount, currency: null };
 }
 
+// ============ Main Logic ============
 async function convert() {
     try {
         const parsed = parseCurrency(text);
         let { amount, currency } = parsed;
         if (!currency) currency = 'CNY';
 
+        const isChinese = targetLanguage === 'zh-CN' || targetLanguage === 'auto';
+
         if (currency === targetCurrency) {
-            const isChinese = targetLanguage === 'zh-CN' || targetLanguage === 'auto';
-            const cnNames = { CNY: '人民币', USD: '美元', EUR: '欧元', GBP: '英镑', JPY: '日元', HKD: '港币', KRW: '韩元', TWD: '台币', SGD: '新加坡元', AUD: '澳元', CAD: '加元', CHF: '瑞郎', THB: '泰铢', INR: '卢比', RUB: '卢布' };
-            const name = isChinese ? (cnNames[currency] || currency) : currency;
+            const name = isChinese ? (CN_NAMES[currency] || currency) : currency;
             return amount + ' ' + name;
         }
 
@@ -60,11 +76,9 @@ async function convert() {
 
         const converted = (amount * rates[targetCurrency]).toFixed(2);
 
-        const isChinese = targetLanguage === 'zh-CN' || targetLanguage === 'auto';
         if (isChinese) {
-            const cnNames = { CNY: '人民币', USD: '美元', EUR: '欧元', GBP: '英镑', JPY: '日元', HKD: '港币', KRW: '韩元', TWD: '台币', SGD: '新加坡元', AUD: '澳元', CAD: '加元', CHF: '瑞郎', THB: '泰铢', INR: '卢比', RUB: '卢布' };
-            const fromName = cnNames[currency] || currency;
-            const toName = cnNames[targetCurrency] || targetCurrency;
+            const fromName = CN_NAMES[currency] || currency;
+            const toName = CN_NAMES[targetCurrency] || targetCurrency;
             return amount + ' ' + fromName + ' ≈ ' + converted + ' ' + toName;
         } else {
             return amount + ' ' + currency + ' = ' + converted + ' ' + targetCurrency;

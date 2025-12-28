@@ -1,105 +1,53 @@
-// PopClip Smart Assistant - Currency Conversion & Translation
+// PopClip Smart Assistant - Translation Module
 const axios = require('axios');
+
 const text = popclip.input.text.trim();
-const targetCurrency = popclip.options.targetCurrency || 'CNY';
 const targetLanguage = popclip.options.targetLanguage || 'auto';
-const pureNumberMode = popclip.options.pureNumberMode || 'currency';
 const translationService = popclip.options.translationService || 'google';
 const apiKey = popclip.options.apiKey || '';
 const customApiUrl = popclip.options.customApiUrl || '';
 const customModel = popclip.options.customModel || 'gpt-4o-mini';
 const customPrompt = popclip.options.customPrompt || '';
 
-const CURRENCY_CODES = ['USD', 'EUR', 'GBP', 'JPY', 'CNY', 'HKD', 'AUD', 'CAD', 'CHF', 'SGD', 'NZD', 'INR', 'KRW', 'THB', 'MYR', 'RUB', 'TWD'];
+// ============ Language Detection (Precompiled) ============
+const RE_JAPANESE = /[\u3040-\u309f\u30a0-\u30ff]/;
+const RE_KOREAN = /[\uac00-\ud7af]/;
+const RE_CHINESE = /[\u4e00-\u9fa5]/;
+const RE_RUSSIAN = /[\u0400-\u04ff]/;
 
-// ============ Currency Functions ============
-const CN_CURRENCY_NAMES = {
-    '人民币': 'CNY', '美元': 'USD', '美金': 'USD', '欧元': 'EUR', '英镑': 'GBP',
-    '日元': 'JPY', '日币': 'JPY', '港币': 'HKD', '港元': 'HKD', '韩元': 'KRW',
-    '台币': 'TWD', '新台币': 'TWD', '新加坡元': 'SGD', '新币': 'SGD',
-    '澳元': 'AUD', '澳币': 'AUD', '加元': 'CAD', '加币': 'CAD',
-    '瑞士法郎': 'CHF', '瑞郎': 'CHF', '泰铢': 'THB', '卢比': 'INR', '卢布': 'RUB'
-};
-const CN_NAMES_PATTERN = Object.keys(CN_CURRENCY_NAMES).join('|');
-
-function isCurrency(t) {
-    if (/[$¥€£₹₩₽฿₺₴₵]/.test(t)) return true;
-    const codePattern = new RegExp(`\\d+[\\s,.]*(${CURRENCY_CODES.join('|')})`, 'i');
-    if (codePattern.test(t)) return true;
-    const reversePattern = new RegExp(`(${CURRENCY_CODES.join('|')})[\\s]*\\d+`, 'i');
-    if (reversePattern.test(t)) return true;
-    // Check Chinese currency names
-    const cnPattern = new RegExp(`\\d+[\\s]*(${CN_NAMES_PATTERN})`);
-    if (cnPattern.test(t)) return true;
-    const cnReversePattern = new RegExp(`(${CN_NAMES_PATTERN})[\\s]*\\d+`);
-    return cnReversePattern.test(t);
-}
-
-function detectTextType(t, mode) {
-    if (isCurrency(t)) return 'currency';
-    if (/^\s*[\d,]+\.?\d*\s*$/.test(t)) return mode;
-    return 'text';
-}
-
-function parseCurrency(t) {
-    const cleaned = t.replace(/,/g, '');
-
-    // Check Chinese currency names first
-    for (const [name, code] of Object.entries(CN_CURRENCY_NAMES)) {
-        if (cleaned.includes(name)) {
-            const numMatch = cleaned.match(/(\d+\.?\d*)/);
-            if (numMatch) return { amount: parseFloat(numMatch[1]), currency: code };
-        }
-    }
-
-    let match = cleaned.match(/(\d+\.?\d*)\s*([A-Z]{3})/i);
-    if (match) return { amount: parseFloat(match[1]), currency: match[2].toUpperCase() };
-    match = cleaned.match(/([A-Z]{3})\s*(\d+\.?\d*)/i);
-    if (match) return { amount: parseFloat(match[2]), currency: match[1].toUpperCase() };
-
-    const symbols = { '$': 'USD', '¥': 'CNY', '€': 'EUR', '£': 'GBP', '₹': 'INR', '₩': 'KRW', '₽': 'RUB', '฿': 'THB' };
-    for (const [sym, code] of Object.entries(symbols)) {
-        if (cleaned.includes(sym)) {
-            const numMatch = cleaned.match(/(\d+\.?\d*)/);
-            if (numMatch) return { amount: parseFloat(numMatch[1]), currency: code };
-        }
-    }
-    const numMatch = cleaned.match(/(\d+\.?\d*)/);
-    if (numMatch) return { amount: parseFloat(numMatch[1]), currency: null };
-    throw new Error('Could not parse currency');
-}
-
-
-// ============ Language Detection ============
 function detectLanguage(t) {
-    if (/[\u3040-\u309f\u30a0-\u30ff]/.test(t)) return 'ja';
-    if (/[\uac00-\ud7af]/.test(t)) return 'ko';
-    if (/[\u4e00-\u9fa5]/.test(t)) return 'zh';
-    if (/[\u0400-\u04ff]/.test(t)) return 'ru';
+    if (RE_JAPANESE.test(t)) return 'ja';
+    if (RE_KOREAN.test(t)) return 'ko';
+    if (RE_CHINESE.test(t)) return 'zh';
+    if (RE_RUSSIAN.test(t)) return 'ru';
     return 'en';
 }
+
+// ============ Language Utilities ============
+const LANG_NAMES = {
+    'zh-CN': 'Chinese', 'en': 'English', 'ja': 'Japanese', 'ko': 'Korean',
+    'fr': 'French', 'de': 'German', 'es': 'Spanish', 'ru': 'Russian',
+    'it': 'Italian', 'pt': 'Portuguese', 'nl': 'Dutch', 'ar': 'Arabic',
+    'th': 'Thai', 'vi': 'Vietnamese', 'id': 'Indonesian', 'tr': 'Turkish',
+    'pl': 'Polish', 'uk': 'Ukrainian'
+};
+
+const DEEPL_LANG_MAP = {
+    'zh-CN': 'ZH', 'en': 'EN', 'ja': 'JA', 'ko': 'KO',
+    'fr': 'FR', 'de': 'DE', 'es': 'ES', 'ru': 'RU'
+};
 
 function getTargetLang(detectedLang, userTarget) {
     if (userTarget !== 'auto') return userTarget;
     return (detectedLang === 'zh') ? 'en' : 'zh-CN';
 }
 
-function getLangName(code) {
-    const names = {
-        'zh-CN': 'Chinese', 'en': 'English', 'ja': 'Japanese', 'ko': 'Korean',
-        'fr': 'French', 'de': 'German', 'es': 'Spanish', 'ru': 'Russian',
-        'it': 'Italian', 'pt': 'Portuguese', 'nl': 'Dutch', 'ar': 'Arabic',
-        'th': 'Thai', 'vi': 'Vietnamese', 'id': 'Indonesian', 'tr': 'Turkish',
-        'pl': 'Polish', 'uk': 'Ukrainian'
-    };
-    return names[code] || 'English';
-}
-
 function getPrompt(targetLang) {
+    const langName = LANG_NAMES[targetLang] || 'English';
     if (customPrompt) {
-        return customPrompt.replace(/{lang}/g, getLangName(targetLang));
+        return customPrompt.replace(/{lang}/g, langName);
     }
-    return 'Translate to ' + getLangName(targetLang) + '. Output translation only.';
+    return 'Translate to ' + langName + '. Output translation only.';
 }
 
 // ============ Translation Services ============
@@ -122,8 +70,7 @@ async function translateGoogle(text, targetLang) {
 async function translateDeepL(text, targetLang, apiKey) {
     if (!apiKey) return '❌ DeepL requires API key';
 
-    const langMap = { 'zh-CN': 'ZH', 'en': 'EN', 'ja': 'JA', 'ko': 'KO', 'fr': 'FR', 'de': 'DE', 'es': 'ES', 'ru': 'RU' };
-    const deepLLang = langMap[targetLang] || 'EN';
+    const deepLLang = DEEPL_LANG_MAP[targetLang] || 'EN';
 
     const response = await axios.post('https://api-free.deepl.com/v2/translate',
         'text=' + encodeURIComponent(text) + '&target_lang=' + deepLLang,
@@ -186,7 +133,9 @@ async function translateCustom(text, targetLang, apiKey, apiUrl, model) {
 }
 
 function translateBob(text) {
-    popclip.runAppleScript('tell application "Bob" to translate "' + text.replace(/"/g, '\\"') + '"');
+    // Properly escape for AppleScript
+    const escaped = text.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n');
+    popclip.runAppleScript('tell application "Bob" to translate "' + escaped + '"');
     return '📖 Sent to Bob';
 }
 
@@ -195,7 +144,7 @@ function translateEudic(text) {
     return '📚 Sent to Eudic';
 }
 
-// ============ Main Logic (Translation) ============
+// ============ Main Logic ============
 if (!text) {
     return '❌ No text selected';
 }
