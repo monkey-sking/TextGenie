@@ -168,6 +168,43 @@
             },
             "type": "boolean",
             "defaultValue": true
+        },
+        {
+            "identifier": "enableTerminal",
+            "label": {
+                "en": "Enable Terminal Action",
+                "zh-Hans": "开启终端功能"
+            },
+            "type": "boolean",
+            "defaultValue": true
+        },
+        {
+            "identifier": "preferredTerminal",
+            "label": {
+                "en": "Terminal Emulator",
+                "zh-Hans": "终端模拟器"
+            },
+            "type": "multiple",
+            "values": [
+                "terminal",
+                "iterm2",
+                "auto"
+            ],
+            "valueLabels": [
+                "Terminal",
+                "iTerm2",
+                "Auto"
+            ],
+            "defaultValue": "terminal"
+        },
+        {
+            "identifier": "useNewTab",
+            "label": {
+                "en": "Use New Tab",
+                "zh-Hans": "在新标签页打开"
+            },
+            "type": "boolean",
+            "defaultValue": false
         }
     ],
     "actions": [
@@ -189,6 +226,52 @@
             "javascript file": "currency.js",
             "after": "preview-result",
             "regular expression": "(?i).*([$¥€£₹₩₽฿]|USD|CNY|EUR|GBP|JPY|HKD|KRW|TWD|SGD|AUD|CAD|CHF|THB|INR|RUB|元|币|镑|法郎|铢|卢|円).*"
+        },
+        {
+            "title": {
+                "en": "Run in Terminal",
+                "zh-Hans": "填入终端"
+            },
+            "icon": "terminal.png",
+            "applescript file": "terminal.applescript",
+            "requirements": [
+                "text",
+                "option-preferredTerminal=terminal"
+            ],
+            "regular expression": "(?i)^([$#>%\\s]*)(git|npm|yarn|pnpm|docker|kubectl|brew|apt|ls|cd|pwd|cat|grep|ssh|curl|wget|chmod|sudo|mkdir|rm|cp|mv|ps|kill|top|find|man|node|python[0-9]*|pip[0-9]*|go|rustc|cargo|make|sh|bash|zsh|touch|which|code|open|gh|vercel|npx|deno|bun|java|rails|php|composer|gem|bundle|poetry|conda|nvm|sdk|flutter|pod|aws|gcloud|az|helm|terraform|ansible|pm2|nodemon|tsx|swc|babel|eslint|prettier|jest|vitest|playwright|lerna|nx|turbo|systemctl|export|set|env|alias|source|pkill|service)\\b.*"
+        },
+        {
+            "title": {
+                "en": "Run in Terminal",
+                "zh-Hans": "填入终端"
+            },
+            "icon": "terminal.png",
+            "applescript file": "iterm2.applescript",
+            "requirements": [
+                "text",
+                "option-preferredTerminal=iterm2"
+            ],
+            "app": {
+                "name": "iTerm2",
+                "link": "https://iterm2.com/",
+                "bundleIdentifiers": [
+                    "com.googlecode.iterm2"
+                ]
+            },
+            "regular expression": "(?i)^([$#>%\\s]*)(git|npm|yarn|pnpm|docker|kubectl|brew|apt|ls|cd|pwd|cat|grep|ssh|curl|wget|chmod|sudo|mkdir|rm|cp|mv|ps|kill|top|find|man|node|python[0-9]*|pip[0-9]*|go|rustc|cargo|make|sh|bash|zsh|touch|which|code|open|gh|vercel|npx|deno|bun|java|rails|php|composer|gem|bundle|poetry|conda|nvm|sdk|flutter|pod|aws|gcloud|az|helm|terraform|ansible|pm2|nodemon|tsx|swc|babel|eslint|prettier|jest|vitest|playwright|lerna|nx|turbo|systemctl|export|set|env|alias|source|pkill|service)\\b.*"
+        },
+        {
+            "title": {
+                "en": "Run in Terminal",
+                "zh-Hans": "填入终端"
+            },
+            "icon": "terminal.png",
+            "applescript file": "terminal.applescript",
+            "requirements": [
+                "text",
+                "option-preferredTerminal=auto"
+            ],
+            "regular expression": "(?i)^([$#>%\\s]*)(git|npm|yarn|pnpm|docker|kubectl|brew|apt|ls|cd|pwd|cat|grep|ssh|curl|wget|chmod|sudo|mkdir|rm|cp|mv|ps|kill|top|find|man|node|python[0-9]*|pip[0-9]*|go|rustc|cargo|make|sh|bash|zsh|touch|which|code|open|gh|vercel|npx|deno|bun|java|rails|php|composer|gem|bundle|poetry|conda|nvm|sdk|flutter|pod|aws|gcloud|az|helm|terraform|ansible|pm2|nodemon|tsx|swc|babel|eslint|prettier|jest|vitest|playwright|lerna|nx|turbo|systemctl|export|set|env|alias|source|pkill|service)\\b.*"
         },
         {
             "title": {
