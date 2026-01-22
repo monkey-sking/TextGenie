@@ -1,5 +1,5 @@
 -- iterm2.applescript for TextGenie
--- Top-level script (no 'on run') for maximum compatibility with PopClip
+-- Optimized using official iTerm2 native command for instant filling without auto-run
 
 set rawText to "{popclip text}"
 -- Clean the text: strip leading whitespace and prompt symbols ($, #, >, %)
@@ -7,19 +7,18 @@ set cleanedCmd to do shell script "echo " & quoted form of rawText & " | sed -E 
 
 tell application id "com.googlecode.iterm2"
     activate
-    delay 0.5 -- Wait for activation
     
     if (count windows) is 0 then
         create window with default profile
-        delay 1.0 -- Wait for window initialization
+        delay 0.3 -- Minimal wait for new window
     else if "{popclip option useNewTab}" is "1" then
         tell current window
             create tab with default profile
         end tell
-        delay 0.8 -- Wait for tab initialization
+        delay 0.2 -- Minimal wait for new tab
     end if
     
-    -- Target the frontmost session to write cleaned text
+    -- Native command: extremely fast, no spinner, no auto-run
     tell current session of current window
         write text cleanedCmd newline false
     end tell
