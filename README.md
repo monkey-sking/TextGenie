@@ -9,6 +9,7 @@
 ### 🔗 Open URL
 - Auto-detects URLs, IPs, localhost.
 - Opens in default browser.
+- URL toolkit: clean tracking params, copy domain, generate Markdown link.
 
 ### 💱 Currency Conversion
 - 15 currencies (CNY, USD, EUR, JPY, etc.).
@@ -32,6 +33,12 @@
 - **Smart Auto-Correction**: Automatically prepends `/` or `~/` to common patterns (e.g., `Users/`, `Desktop/`, `Downloads/`).
 - **Placeholder Support**: Supports `%user%` placeholder for dynamic resolution.
 - **Wide App Support**: Finder, Path Finder, ForkLift, QSpace, Commander One, Marta.
+- **Path Toolkit**: Copy normalized path, shell-escaped path, parent path, and a ready-to-run `cd` command.
+
+### 🧰 Developer Toolkit
+- Format and minify JSON.
+- Decode Base64 and JWT payloads.
+- Parse query strings into readable key-value lines.
 
 ## 🛠 Installation
 

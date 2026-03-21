@@ -8,6 +8,7 @@ const apiKey = popclip.options.apiKey || '';
 const customApiUrl = popclip.options.customApiUrl || '';
 const customModel = popclip.options.customModel || 'gpt-4o-mini';
 const customPrompt = popclip.options.customPrompt || '';
+const HTTP_TIMEOUT_MS = 8000;
 
 // ============ Language Detection (Precompiled) ============
 const RE_JAPANESE = /[\u3040-\u309f\u30a0-\u30ff]/;
@@ -53,7 +54,7 @@ function getPrompt(targetLang) {
 // ============ Translation Services ============
 async function translateGoogle(text, targetLang) {
     const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + '&dt=t&q=' + encodeURIComponent(text);
-    const response = await axios.get(url);
+    const response = await axios.get(url, { timeout: HTTP_TIMEOUT_MS });
     const data = response.data;
 
     let translated = '';
@@ -74,7 +75,10 @@ async function translateDeepL(text, targetLang, apiKey) {
 
     const response = await axios.post('https://api-free.deepl.com/v2/translate',
         'text=' + encodeURIComponent(text) + '&target_lang=' + deepLLang,
-        { headers: { 'Authorization': 'DeepL-Auth-Key ' + apiKey, 'Content-Type': 'application/x-www-form-urlencoded' } }
+        {
+            headers: { 'Authorization': 'DeepL-Auth-Key ' + apiKey, 'Content-Type': 'application/x-www-form-urlencoded' },
+            timeout: HTTP_TIMEOUT_MS
+        }
     );
 
     if (response.data?.translations?.[0]) {
@@ -95,7 +99,10 @@ async function translateOpenAI(text, targetLang, apiKey) {
             ],
             max_tokens: 1000
         },
-        { headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' } }
+        {
+            headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+            timeout: HTTP_TIMEOUT_MS
+        }
     );
 
     return response.data?.choices?.[0]?.message?.content?.trim() || 'OpenAI translation failed';
@@ -107,7 +114,7 @@ async function translateGemini(text, targetLang, apiKey) {
     const response = await axios.post(
         'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey,
         { contents: [{ parts: [{ text: getPrompt(targetLang) + '\n\n' + text }] }] },
-        { headers: { 'Content-Type': 'application/json' } }
+        { headers: { 'Content-Type': 'application/json' }, timeout: HTTP_TIMEOUT_MS }
     );
 
     return response.data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'Gemini translation failed';
@@ -126,22 +133,33 @@ async function translateCustom(text, targetLang, apiKey, apiUrl, model) {
             ],
             max_tokens: 1000
         },
-        { headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' } }
+        {
+            headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+            timeout: HTTP_TIMEOUT_MS
+        }
     );
 
     return response.data?.choices?.[0]?.message?.content?.trim() || 'Custom API translation failed';
 }
 
 function translateBob(text) {
-    // Properly escape for AppleScript
     const escaped = text.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n');
-    popclip.runAppleScript('tell application "Bob" to translate "' + escaped + '"');
+    popclip.runAppleScript(
+        'with timeout of 3 seconds\n' +
+        'tell application "Bob" to translate "' + escaped + '"\n' +
+        'end timeout'
+    );
     return '📖 Sent to Bob';
 }
 
 function translateEudic(text) {
     popclip.openUrl('eudic://dict/' + encodeURIComponent(text));
     return '📚 Sent to Eudic';
+}
+
+function getErrorMessage(e) {
+    if (e.code === 'ECONNABORTED') return 'Request timed out';
+    return e.response?.data?.error?.message || e.message || 'Error';
 }
 
 // ============ Main Logic ============
@@ -170,5 +188,5 @@ try {
             return await translateGoogle(text, targetLang);
     }
 } catch (e) {
-    return '❌ ' + (e.response?.data?.error?.message || e.message || 'Error');
+    return '❌ ' + getErrorMessage(e);
 }

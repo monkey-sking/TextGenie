@@ -40,3 +40,6 @@ npm-debug.log*
 # Temp files
 *.tmp
 *.temp
+
+# Build artifacts
+extensions/*.popclipextz

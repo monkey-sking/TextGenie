@@ -4,6 +4,7 @@ const axios = require('axios');
 const text = popclip.input.text.trim();
 const targetCurrency = popclip.options.targetCurrency || 'CNY';
 const targetLanguage = popclip.options.targetLanguage || 'auto';
+const HTTP_TIMEOUT_MS = 8000;
 
 // ============ Currency Constants (Precompiled) ============
 const CN_CURRENCY_NAMES = {
@@ -67,7 +68,9 @@ async function convert() {
             return amount + ' ' + name;
         }
 
-        const response = await axios.get('https://api.exchangerate-api.com/v4/latest/' + currency);
+        const response = await axios.get('https://api.exchangerate-api.com/v4/latest/' + currency, {
+            timeout: HTTP_TIMEOUT_MS
+        });
         const rates = response.data.rates;
 
         if (!rates?.[targetCurrency]) {
@@ -84,7 +87,8 @@ async function convert() {
             return amount + ' ' + currency + ' = ' + converted + ' ' + targetCurrency;
         }
     } catch (e) {
-        return '❌ Currency error: ' + e.message;
+        const message = e.code === 'ECONNABORTED' ? 'Request timed out' : e.message;
+        return '❌ Currency error: ' + message;
     }
 }
 
