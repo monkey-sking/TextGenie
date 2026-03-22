@@ -213,33 +213,6 @@
     },
     {
       "title": {
-        "en": "Clean URL",
-        "zh-Hans": "清理网址"
-      },
-      "icon": "url.png",
-      "javascript file": "url_clean.js",
-      "requirements": ["url"]
-    },
-    {
-      "title": {
-        "en": "Copy Domain",
-        "zh-Hans": "复制域名"
-      },
-      "icon": "url.png",
-      "javascript file": "url_domain.js",
-      "requirements": ["url"]
-    },
-    {
-      "title": {
-        "en": "Markdown Link",
-        "zh-Hans": "Markdown 链接"
-      },
-      "icon": "url.png",
-      "javascript file": "url_markdown.js",
-      "requirements": ["url"]
-    },
-    {
-      "title": {
         "en": "Convert",
         "zh-Hans": "汇率转换"
       },
@@ -291,87 +264,6 @@
         "icon": "path.svg",
         "applescript file": "path.applescript",
         "regular expression": "(?mi)^([/~]|\\.?\\./|Users/|Applications/|Volumes/|Desktop/|Downloads/|Documents/|Library/|Pictures/|Movies/|Music/|%user%(/)?)(.+)$"
-    },
-    {
-      "title": {
-        "en": "Copy Path",
-        "zh-Hans": "复制路径"
-      },
-      "icon": "path.svg",
-      "javascript file": "path_copy.js",
-      "requirements": ["path"]
-    },
-    {
-      "title": {
-        "en": "Shell Path",
-        "zh-Hans": "Shell 路径"
-      },
-      "icon": "path.svg",
-      "javascript file": "path_shell.js",
-      "requirements": ["path"]
-    },
-    {
-      "title": {
-        "en": "Parent Path",
-        "zh-Hans": "父目录路径"
-      },
-      "icon": "path.svg",
-      "javascript file": "path_parent.js",
-      "requirements": ["path"]
-    },
-    {
-      "title": {
-        "en": "CD Parent",
-        "zh-Hans": "复制 cd 命令"
-      },
-      "icon": "path.svg",
-      "javascript file": "path_cd.js",
-      "requirements": ["path"]
-    },
-    {
-      "title": {
-        "en": "Format JSON",
-        "zh-Hans": "格式化 JSON"
-      },
-      "icon": "icon.svg",
-      "javascript file": "json_format.js",
-      "regex": "(?s)^\\s*[\\[{].*[\\]}]\\s*$"
-    },
-    {
-      "title": {
-        "en": "Minify JSON",
-        "zh-Hans": "压缩 JSON"
-      },
-      "icon": "icon.svg",
-      "javascript file": "json_minify.js",
-      "regex": "(?s)^\\s*[\\[{].*[\\]}]\\s*$"
-    },
-    {
-      "title": {
-        "en": "Decode Base64",
-        "zh-Hans": "Base64 解码"
-      },
-      "icon": "icon.svg",
-      "javascript file": "base64_decode.js",
-      "regex": "(?i)^(?=.{16,}$)(?=.*[=+/_-])[a-z0-9+/_=-]+$"
-    },
-    {
-      "title": {
-        "en": "Decode JWT",
-        "zh-Hans": "JWT 载荷"
-      },
-      "icon": "icon.svg",
-      "javascript file": "jwt_decode.js",
-      "regex": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$"
-    },
-    {
-      "title": {
-        "en": "Parse Query",
-        "zh-Hans": "解析参数"
-      },
-      "icon": "icon.svg",
-      "javascript file": "query_parse.js",
-      "regex": "(?i)(?:[?&][a-z0-9_.%+-]+=|^[a-z0-9_.%+-]+=.+(?:&[a-z0-9_.%+-]+=.*)*)"
     },
     {
       "title": {
