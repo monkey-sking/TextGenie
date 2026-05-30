@@ -1,13 +1,13 @@
 // PopClip Smart Assistant - Translation Module
 const axios = require('axios');
 
-const text = popclip.input.text.trim();
+const text = String(popclip.input.text || '').trim();
 const targetLanguage = popclip.options.targetLanguage || 'auto';
 const translationService = popclip.options.translationService || 'google';
-const apiKey = popclip.options.apiKey || '';
-const customApiUrl = popclip.options.customApiUrl || '';
-const customModel = popclip.options.customModel || 'gpt-4o-mini';
-const customPrompt = popclip.options.customPrompt || '';
+const apiKey = String(popclip.options.apiKey || '').trim();
+const customApiUrl = String(popclip.options.customApiUrl || '').trim();
+const customModel = String(popclip.options.customModel || '').trim();
+const customPrompt = String(popclip.options.customPrompt || '').trim();
 const HTTP_TIMEOUT_MS = 8000;
 
 // ============ Language Detection (Precompiled) ============
@@ -49,6 +49,94 @@ function getPrompt(targetLang) {
         return customPrompt.replace(/{lang}/g, langName);
     }
     return 'Translate to ' + langName + '. Output translation only.';
+}
+
+function joinTextParts(parts) {
+    if (!Array.isArray(parts)) return '';
+    let text = '';
+
+    for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        if (typeof part === 'string') {
+            text += part;
+        } else if (typeof part?.text === 'string') {
+            text += part.text;
+        }
+    }
+
+    return text.trim();
+}
+
+function extractResponseText(data) {
+    if (typeof data === 'string') return data.trim();
+
+    const messageContent = data?.choices?.[0]?.message?.content;
+    if (typeof messageContent === 'string' && messageContent.trim()) {
+        return messageContent.trim();
+    }
+
+    const messageParts = joinTextParts(messageContent);
+    if (messageParts) return messageParts;
+
+    const choiceText = data?.choices?.[0]?.text;
+    if (typeof choiceText === 'string' && choiceText.trim()) {
+        return choiceText.trim();
+    }
+
+    const outputText = data?.output_text;
+    if (typeof outputText === 'string' && outputText.trim()) {
+        return outputText.trim();
+    }
+
+    const candidateParts = joinTextParts(data?.candidates?.[0]?.content?.parts);
+    if (candidateParts) return candidateParts;
+
+    if (Array.isArray(data?.output)) {
+        for (let i = 0; i < data.output.length; i++) {
+            const item = data.output[i];
+            const contentText = joinTextParts(item?.content);
+            if (contentText) return contentText;
+        }
+    }
+
+    return '';
+}
+
+function summarizeResponseBody(data) {
+    if (typeof data === 'string') return data.trim();
+    if (typeof data?.message === 'string') return data.message.trim();
+    if (typeof data?.detail === 'string') return data.detail.trim();
+    if (typeof data?.error === 'string') return data.error.trim();
+    if (typeof data?.error?.message === 'string') return data.error.message.trim();
+    return '';
+}
+
+function normalizeCustomApiUrl(apiUrl) {
+    const raw = String(apiUrl || '').trim();
+    if (!raw) return '';
+
+    try {
+        const parsed = new URL(raw);
+        const pathname = parsed.pathname.replace(/\/+$/, '');
+
+        if (/(\/chat\/completions|\/completions|\/responses)$/.test(pathname)) {
+            return parsed.toString();
+        }
+
+        if (!pathname || pathname === '/') {
+            parsed.pathname = '/v1/chat/completions';
+            return parsed.toString();
+        }
+
+        if (/\/v[0-9]+$/.test(pathname)) {
+            parsed.pathname = pathname + '/chat/completions';
+            return parsed.toString();
+        }
+
+        return parsed.toString();
+    } catch (e) {
+        return raw;
+    }
 }
 
 // ============ Translation Services ============
@@ -121,10 +209,17 @@ async function translateGemini(text, targetLang, apiKey) {
 }
 
 async function translateCustom(text, targetLang, apiKey, apiUrl, model) {
-    if (!apiKey) return '❌ Custom API requires API key';
     if (!apiUrl) return '❌ Custom API URL not configured';
+    if (!model) return '❌ Custom model not configured';
 
-    const response = await axios.post(apiUrl,
+    const requestUrl = normalizeCustomApiUrl(apiUrl);
+    const headers = { 'Content-Type': 'application/json' };
+
+    if (apiKey) {
+        headers.Authorization = 'Bearer ' + apiKey;
+    }
+
+    const response = await axios.post(requestUrl,
         {
             model: model || 'gpt-4o-mini',
             messages: [
@@ -134,12 +229,12 @@ async function translateCustom(text, targetLang, apiKey, apiUrl, model) {
             max_tokens: 1000
         },
         {
-            headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+            headers,
             timeout: HTTP_TIMEOUT_MS
         }
     );
 
-    return response.data?.choices?.[0]?.message?.content?.trim() || 'Custom API translation failed';
+    return extractResponseText(response.data) || 'Custom API translation failed';
 }
 
 function translateBob(text) {
@@ -159,7 +254,7 @@ function translateEudic(text) {
 
 function getErrorMessage(e) {
     if (e.code === 'ECONNABORTED') return 'Request timed out';
-    return e.response?.data?.error?.message || e.message || 'Error';
+    return summarizeResponseBody(e.response?.data) || e.message || 'Error';
 }
 
 // ============ Main Logic ============

@@ -43,3 +43,6 @@ npm-debug.log*
 
 # Build artifacts
 extensions/*.popclipextz
+
+# Added by automated sync script
+src/TextGenie.popclipext/Config.json

@@ -68,8 +68,8 @@
       },
       "type": "string",
       "description": {
-        "en": "Required for DeepL/OpenAI/Gemini",
-        "zh-Hans": "DeepL/OpenAI/Gemini 需要"
+        "en": "Required for DeepL/OpenAI/Gemini, optional for Custom",
+        "zh-Hans": "DeepL/OpenAI/Gemini 必填，自定义接口按需填写"
       }
     },
     {
@@ -78,7 +78,11 @@
         "en": "Custom API URL",
         "zh-Hans": "自定义 API 地址"
       },
-      "type": "string"
+      "type": "string",
+      "description": {
+        "en": "OpenAI-compatible base URL or full chat completions endpoint",
+        "zh-Hans": "支持 OpenAI 兼容的基础地址，或完整 chat completions 接口"
+      }
     },
     {
       "identifier": "customModel",
@@ -86,7 +90,11 @@
         "en": "Custom Model",
         "zh-Hans": "自定义模型"
       },
-      "type": "string"
+      "type": "string",
+      "description": {
+        "en": "Required for Custom. Use a model name supported by your server",
+        "zh-Hans": "自定义接口必填。请填写你的服务实际支持的模型名"
+      }
     },
     {
       "identifier": "customPrompt",
