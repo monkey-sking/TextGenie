@@ -174,6 +174,29 @@ async function translateGoogle(text, targetLang) {
     return translated || 'Translation failed';
 }
 
+async function translateGoogleCloud(text, targetLang, apiKey) {
+    if (!apiKey) return '❌ Google Cloud Translation requires API key';
+
+    const response = await axios.post(
+        'https://translation.googleapis.com/language/translate/v2?key=' + encodeURIComponent(apiKey),
+        {
+            q: text,
+            target: targetLang,
+            format: 'text'
+        },
+        {
+            headers: { 'Content-Type': 'application/json' },
+            timeout: HTTP_TIMEOUT_MS
+        }
+    );
+
+    const translated = response.data?.data?.translations?.[0]?.translatedText;
+    if (!translated || typeof translated !== 'string') {
+        throw new Error('Google Cloud Translation returned no translation');
+    }
+    return translated.trim();
+}
+
 async function translateDeepL(text, targetLang, apiKey) {
     if (!apiKey) return '❌ DeepL requires API key';
 
@@ -285,6 +308,8 @@ const targetLang = getTargetLang(detectedLang, targetLanguage);
 
 try {
     switch (translationService) {
+        case 'google-cloud':
+            return await translateGoogleCloud(text, targetLang, apiKey);
         case 'deepl':
             return await translateDeepL(text, targetLang, apiKey);
         case 'openai':
@@ -298,7 +323,14 @@ try {
         case 'eudic':
             return translateEudic(text);
         default:
-            return await translateGoogle(text, targetLang);
+            try {
+                return await translateGoogle(text, targetLang);
+            } catch (googleError) {
+                // If the unofficial endpoint is blocked, use the official API
+                // automatically when the user has configured a Google API key.
+                if (apiKey) return await translateGoogleCloud(text, targetLang, apiKey);
+                throw googleError;
+            }
     }
 } catch (e) {
     return '❌ ' + getErrorMessage(e);
