@@ -9,16 +9,13 @@ const HTTP_TIMEOUT_MS = 8000;
 // ============ Currency Constants (Precompiled) ============
 const CN_CURRENCY_NAMES = {
     '人民币': 'CNY', '美元': 'USD', '美金': 'USD', '欧元': 'EUR', '英镑': 'GBP',
-    '日元': 'JPY', '日币': 'JPY', '日圆': 'JPY', '日圓': 'JPY', '円': 'JPY', '港币': 'HKD', '港元': 'HKD', '韩元': 'KRW',
+    '日元': 'JPY', '日币': 'JPY', '日圆': 'JPY', '日圓': 'JPY', '円': 'JPY', '日圆': 'JPY', '日圓': 'JPY', '円': 'JPY', '港币': 'HKD', '港元': 'HKD', '韩元': 'KRW',
     '台币': 'TWD', '新台币': 'TWD', '新加坡元': 'SGD', '新币': 'SGD',
     '澳元': 'AUD', '澳币': 'AUD', '加元': 'CAD', '加币': 'CAD',
     '瑞士法郎': 'CHF', '瑞郎': 'CHF', '泰铢': 'THB', '卢比': 'INR', '卢布': 'RUB'
 };
 
-const CURRENCY_SYMBOLS = {
-    '
-
-const CN_NAMES = {
+const CURRENCY_SYMBOLS = {\n    '$': 'USD', '¥': 'CNY', '€': 'EUR', '£': 'GBP',\n    '₹': 'INR', '₩': 'KRW', '₽': 'RUB', '฿': 'THB'\n};\n\n// Qualified symbols are checked before the ambiguous bare ¥/￥ symbol.\nconst QUALIFIED_SYMBOLS = [\n    { pattern: /(?:JP|JPN)\\s*[¥￥]/i, currency: 'JPY' },\n    { pattern: /(?:CN|CNY)\\s*[¥￥]/i, currency: 'CNY' },\n    { pattern: /(?:HK|HKD)\\s*[¥￥]/i, currency: 'HKD' },\n    { pattern: /HK\\s*\\$/i, currency: 'HKD' },\n    { pattern: /NT\\s*\\$/i, currency: 'TWD' },\n    { pattern: /(?:A|AUD)\\s*\\$/i, currency: 'AUD' },\n    { pattern: /(?:C|CAD)\\s*\\$/i, currency: 'CAD' },\n    { pattern: /(?:S|SGD)\\s*\\$/i, currency: 'SGD' },\n    { pattern: /US\\s*\\$/i, currency: 'USD' }\n];\n\nconst CN_NAMES = {
     CNY: '人民币', USD: '美元', EUR: '欧元', GBP: '英镑', JPY: '日元',
     HKD: '港币', KRW: '韩元', TWD: '台币', SGD: '新加坡元',
     AUD: '澳元', CAD: '加元', CHF: '瑞郎', THB: '泰铢', INR: '卢比', RUB: '卢布'
