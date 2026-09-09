@@ -15,7 +15,25 @@ const CN_CURRENCY_NAMES = {
     '瑞士法郎': 'CHF', '瑞郎': 'CHF', '泰铢': 'THB', '卢比': 'INR', '卢布': 'RUB'
 };
 
-const CURRENCY_SYMBOLS = {\n    '$': 'USD', '¥': 'CNY', '€': 'EUR', '£': 'GBP',\n    '₹': 'INR', '₩': 'KRW', '₽': 'RUB', '฿': 'THB'\n};\n\n// Qualified symbols are checked before the ambiguous bare ¥/￥ symbol.\nconst QUALIFIED_SYMBOLS = [\n    { pattern: /(?:JP|JPN)\\s*[¥￥]/i, currency: 'JPY' },\n    { pattern: /(?:CN|CNY)\\s*[¥￥]/i, currency: 'CNY' },\n    { pattern: /(?:HK|HKD)\\s*[¥￥]/i, currency: 'HKD' },\n    { pattern: /HK\\s*\\$/i, currency: 'HKD' },\n    { pattern: /NT\\s*\\$/i, currency: 'TWD' },\n    { pattern: /(?:A|AUD)\\s*\\$/i, currency: 'AUD' },\n    { pattern: /(?:C|CAD)\\s*\\$/i, currency: 'CAD' },\n    { pattern: /(?:S|SGD)\\s*\\$/i, currency: 'SGD' },\n    { pattern: /US\\s*\\$/i, currency: 'USD' }\n];\n\nconst CN_NAMES = {
+const CURRENCY_SYMBOLS = {
+    '$': 'USD', '¥': 'CNY', '€': 'EUR', '£': 'GBP',
+    '₹': 'INR', '₩': 'KRW', '₽': 'RUB', '฿': 'THB'
+};
+
+// Qualified symbols are checked before the ambiguous bare ¥/￥ symbol.
+const QUALIFIED_SYMBOLS = [
+    { pattern: /(?:JP|JPN)\s*[¥￥]/i, currency: 'JPY' },
+    { pattern: /(?:CN|CNY)\s*[¥￥]/i, currency: 'CNY' },
+    { pattern: /(?:HK|HKD)\s*[¥￥]/i, currency: 'HKD' },
+    { pattern: /HK\s*\$/i, currency: 'HKD' },
+    { pattern: /NT\s*\$/i, currency: 'TWD' },
+    { pattern: /(?:A|AUD)\s*\$/i, currency: 'AUD' },
+    { pattern: /(?:C|CAD)\s*\$/i, currency: 'CAD' },
+    { pattern: /(?:S|SGD)\s*\$/i, currency: 'SGD' },
+    { pattern: /US\s*\$/i, currency: 'USD' }
+];
+
+const CN_NAMES = {
     CNY: '人民币', USD: '美元', EUR: '欧元', GBP: '英镑', JPY: '日元',
     HKD: '港币', KRW: '韩元', TWD: '台币', SGD: '新加坡元',
     AUD: '澳元', CAD: '加元', CHF: '瑞郎', THB: '泰铢', INR: '卢比', RUB: '卢布'
