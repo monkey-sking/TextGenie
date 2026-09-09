@@ -9,7 +9,7 @@ const HTTP_TIMEOUT_MS = 8000;
 // ============ Currency Constants (Precompiled) ============
 const CN_CURRENCY_NAMES = {
     '人民币': 'CNY', '美元': 'USD', '美金': 'USD', '欧元': 'EUR', '英镑': 'GBP',
-    '日元': 'JPY', '日币': 'JPY', '港币': 'HKD', '港元': 'HKD', '韩元': 'KRW',
+    '日元': 'JPY', '日币': 'JPY', '日圆': 'JPY', '日圓': 'JPY', '円': 'JPY', '港币': 'HKD', '港元': 'HKD', '韩元': 'KRW',
     '台币': 'TWD', '新台币': 'TWD', '新加坡元': 'SGD', '新币': 'SGD',
     '澳元': 'AUD', '澳币': 'AUD', '加元': 'CAD', '加币': 'CAD',
     '瑞士法郎': 'CHF', '瑞郎': 'CHF', '泰铢': 'THB', '卢比': 'INR', '卢布': 'RUB'
@@ -104,7 +104,13 @@ return await convert();
 const QUALIFIED_SYMBOLS = [
     { pattern: /(?:JP|JPN)\\s*[¥￥]/i, currency: 'JPY' },
     { pattern: /(?:CN|CNY)\\s*[¥￥]/i, currency: 'CNY' },
-    { pattern: /(?:HK|HKD)\\s*[¥￥]/i, currency: 'HKD' }
+    { pattern: /(?:HK|HKD)\\s*[¥￥]/i, currency: 'HKD' },
+    { pattern: /HK\\s*\$/i, currency: 'HKD' },
+    { pattern: /NT\\s*\$/i, currency: 'TWD' },
+    { pattern: /(?:A|AUD)\\s*\$/i, currency: 'AUD' },
+    { pattern: /(?:C|CAD)\\s*\$/i, currency: 'CAD' },
+    { pattern: /(?:S|SGD)\\s*\$/i, currency: 'SGD' },
+    { pattern: /US\\s*\$/i, currency: 'USD' }
 ];
 
 const CN_NAMES = {
