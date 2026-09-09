@@ -21,6 +21,7 @@
       "type": "multiple",
       "values": [
         "google",
+        "google-cloud",
         "deepl",
         "openai",
         "gemini",
@@ -29,7 +30,8 @@
         "eudic"
       ],
       "valueLabels": [
-        "🌐 Google",
+        "🌐 Google (免 Key/实验)",
+        "☁️ Google Cloud (官方)",
         "🔷 DeepL",
         "🤖 OpenAI",
         "✨ Gemini",
@@ -68,8 +70,8 @@
       },
       "type": "string",
       "description": {
-        "en": "Required for DeepL/OpenAI/Gemini, optional for Custom",
-        "zh-Hans": "DeepL/OpenAI/Gemini 必填，自定义接口按需填写"
+        "en": "Required for Google Cloud/DeepL/OpenAI/Gemini, optional for Custom",
+        "zh-Hans": "Google Cloud/DeepL/OpenAI/Gemini 必填，自定义接口按需填写"
       }
     },
     {
