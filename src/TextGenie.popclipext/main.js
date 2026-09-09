@@ -142,8 +142,26 @@ function normalizeCustomApiUrl(apiUrl) {
 // ============ Translation Services ============
 async function translateGoogle(text, targetLang) {
     const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + '&dt=t&q=' + encodeURIComponent(text);
-    const response = await axios.get(url, { timeout: HTTP_TIMEOUT_MS });
-    const data = response.data;
+    const response = await axios.get(url, {
+        timeout: HTTP_TIMEOUT_MS,
+        headers: { 'Accept': 'application/json, text/plain' },
+        responseType: 'text',
+        transformResponse: [(value) => value]
+    });
+
+    const contentType = String(response.headers?.['content-type'] || '').toLowerCase();
+    const rawBody = String(response.data || '').trim();
+    const looksLikeHtml = /(?:^<!doctype\\s+html|^<html[\\s>]|<title>\\s*(?:sorry|google))/i.test(rawBody);
+    if (looksLikeHtml || contentType.includes('text/html')) {
+        throw new Error('Google 翻译暂时不可用：请求被 Google 反爬拦截，请稍后重试或切换 DeepL/API');
+    }
+
+    let data;
+    try {
+        data = JSON.parse(rawBody);
+    } catch (e) {
+        throw new Error('Google 翻译返回了无效响应，请稍后重试或切换其他翻译服务');
+    }
 
     let translated = '';
     if (Array.isArray(data) && Array.isArray(data[0])) {
