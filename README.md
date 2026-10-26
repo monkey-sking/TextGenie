@@ -1,5 +1,9 @@
 # 🍌 TextGenie for PopClip
 
+<!-- badges:start -->
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)](https://github.com/monkey-sking/TextGenie/blob/main/LICENSE) [![Last commit](https://img.shields.io/github/last-commit/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/commits/main) [![JavaScript](https://img.shields.io/github/languages/top/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/search?l=JavaScript) [![views](https://hits.sh/github.com/monkey-sking/TextGenie.svg?style=flat-square&label=views&color=0e75b6)](https://github.com/monkey-sking/TextGenie)
+<!-- badges:end -->
+
 [🇨🇳 中文版](./README_zh.md)
 
 **TextGenie** is a magical PopClip extension with multiple intelligent actions.
