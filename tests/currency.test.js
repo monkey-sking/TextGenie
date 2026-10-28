@@ -98,7 +98,7 @@ async function runCurrency(input, targetCurrency = 'USD') {
   }
   assert.equal((await runUrlAction('HTTPS://example.com')).opened, 'HTTPS://example.com', 'uppercase URL schemes must not be prefixed twice');
   assert.equal((await runUrlAction('example.com')).opened, 'https://example.com', 'bare domains should receive https');
-  assert.match((await runUrlAction('   ')).output, /请选择网址/);
+  assert.match((await runUrlAction('   ')).output, /请先选择网址/);
 
   const popclipRegex = (pattern) => {
     let flags = '';
