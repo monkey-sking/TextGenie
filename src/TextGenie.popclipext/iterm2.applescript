@@ -3,7 +3,7 @@
 
 set rawText to "{popclip text}"
 -- Clean the text: strip leading whitespace and prompt symbols ($, #, >, %)
-set cleanedCmd to do shell script ("/bin/echo " & quoted form of rawText & " | /usr/bin/sed -E 's/^[[:space:]$#>%]+//'")
+set cleanedCmd to do shell script ("/usr/bin/printf '%s' " & quoted form of rawText & " | /usr/bin/sed -E 's/^[[:space:]$#>%]+//'")
 
 try
     with timeout of 5 seconds
