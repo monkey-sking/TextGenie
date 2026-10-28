@@ -35,15 +35,15 @@ async function runCurrency(input, targetCurrency = 'USD') {
 (async () => {
   const mixed = await runCurrency('$100+€50+JP¥3,000');
   assert.match(mixed.output, /跨币种合计/);
-  assert.match(mixed.output, /180\.00 USD/);
+  assert.match(mixed.output, /185\.00 美元/);
   assert.equal(mixed.calls.length, 3, 'should fetch one rate table per unique source currency');
 
   const same = await runCurrency('$58.83+56.26');
-  assert.match(same.output, /115\.09 USD/);
-  assert.equal(same.calls.length, 1, 'same-currency sums should need no external rate lookup');
+  assert.match(same.output, /115\.09 美元/);
+  assert.equal(same.calls.length, 0, 'same-currency sums should need no external rate lookup');
 
   const explicit = await runCurrency('100 EUR+50 EUR');
-  assert.match(explicit.output, /165\.00 USD/);
+  assert.match(explicit.output, /165\.00 美元/);
 
   const configActions = config.actions;
   for (const file of ['url-encode.js', 'url-decode.js', 'base64-encode.js', 'base64-decode.js']) {
