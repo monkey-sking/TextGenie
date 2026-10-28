@@ -1,4 +1,4 @@
-# 🍌 TextGenie for PopClip
+# TextGenie for PopClip
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)](LICENSE) [![Last commit](https://img.shields.io/github/last-commit/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/commits/main)
 
@@ -27,9 +27,9 @@ Configure translation service, target language, API key, target currency, prefer
 
 ## 🔄 Updates
 
-Use the **Check for Updates** action in PopClip to check the latest stable GitHub release. If a newer version is found, it opens the release page; download the `.popclipextz` asset and double-click it to install. You can also visit [GitHub Releases](https://github.com/monkey-sking/TextGenie/releases) directly. The release workflow builds the archive when a `v*` tag is pushed. You can also run the workflow manually and provide a version to create a release.
+Select the dedicated trigger phrase `textgenie update` or `检查文灵更新` to check the latest stable GitHub release. If a newer version is found, it opens the release page; download the `.popclipextz` asset and double-click it to install. You can also visit [GitHub Releases](https://github.com/monkey-sking/TextGenie/releases) directly. The release workflow builds the archive when a `v*` tag is pushed. You can also run the workflow manually and provide a version to create a release.
 
-PopClip extensions run when invoked, so this extension does not perform silent background update checks while idle. The existing user-triggered **Check for Updates** action checks the latest stable release and opens its release page when an update is available.
+PopClip extensions run when invoked, so this extension does not perform silent background update checks while idle. The update checker is restricted to dedicated trigger phrases so it does not clutter the toolbar for ordinary selected text.
 
 ## 👨‍💻 Development
 
