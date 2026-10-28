@@ -367,7 +367,7 @@
         "en": "Format JSON",
         "zh-Hans": "格式化 JSON"
       },
-      "icon": "icon.svg",
+      "icon": "json-format.svg",
       "javascript file": "format-json.js",
       "after": "preview-result",
       "requirements": [
@@ -380,7 +380,7 @@
         "en": "Minify JSON",
         "zh-Hans": "压缩 JSON"
       },
-      "icon": "icon.svg",
+      "icon": "json-minify.svg",
       "javascript file": "minify-json.js",
       "after": "preview-result",
       "requirements": [
@@ -399,7 +399,7 @@
       "requirements": [
         "text"
       ],
-      "regular expression": "(?s).*(https?://|www\\.|[&=+#%?]|[\\u0080-\\uffff]).*"
+      "regular expression": "(?i).*(https?://|www\\.|[?&=#%+]).*"
     },
     {
       "title": {
@@ -425,7 +425,7 @@
       "requirements": [
         "text"
       ],
-      "regular expression": "(?s).*(?:[\\u0080-\\uffff]|[\\r\\n\\t]).*"
+      "regular expression": "(?s)^(?!\\s*[\\[{]).*[\\r\\n].*$"
     },
     {
       "title": {
