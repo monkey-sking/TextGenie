@@ -10,7 +10,7 @@
 
 **[⬇️ Open downloads and install TextGenie](https://github.com/monkey-sking/TextGenie/releases)**
 
-Open the Releases page and download the `TextGenie.popclipextz` asset from the latest release, then double-click it to install in PopClip. A direct latest-version download link will work after the first release with that asset has been published.
+Open the [Releases page](https://github.com/monkey-sking/TextGenie/releases) and download the `TextGenie.popclipextz` asset from the latest release, then double-click it to install in PopClip. After the first release is published, you can also use the [direct latest-version download link](https://github.com/monkey-sking/TextGenie/releases/latest/download/TextGenie.popclipextz).
 
 ## ✨ Features
 
