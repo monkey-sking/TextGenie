@@ -34,7 +34,7 @@ async function runCurrency(input, targetCurrency = 'USD') {
 
 (async () => {
   const mixed = await runCurrency('$100+€50+JP¥3,000');
-  assert.match(mixed.output, /100\\.00 USD \\+ 50\\.00 EUR \\+ 3,000\\.00 JPY ≈ 185\\.00 USD/);
+  assert.match(mixed.output, /100\.00 USD \+ 50\.00 EUR \+ 3,000\.00 JPY ≈ 185\.00 USD/);
   assert.match(mixed.output, /185\.00 USD/);
   assert.equal(mixed.calls.length, 2, 'same-currency source and target need no rate lookup');
 
