@@ -1,6 +1,6 @@
 # TextGenie for PopClip
 
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)](LICENSE) [![Last commit](https://img.shields.io/github/last-commit/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/commits/main)
+[![CI](https://github.com/monkey-sking/TextGenie/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/monkey-sking/TextGenie/actions/workflows/release.yml) [![Latest Release](https://img.shields.io/github/v/release/monkey-sking/TextGenie?display_name=tag&style=flat-square)](https://github.com/monkey-sking/TextGenie/releases/latest) [![Downloads](https://img.shields.io/github/downloads/monkey-sking/TextGenie/total?style=flat-square)](https://github.com/monkey-sking/TextGenie/releases) [![License](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)](LICENSE) [![Last commit](https://img.shields.io/github/last-commit/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/commits/main)
 
 [🇨🇳 中文版](./README_zh.md)
 
@@ -30,6 +30,10 @@ Configure translation service, target language, API key, target currency, prefer
 Select the dedicated trigger phrase `textgenie update` or `检查文灵更新` to check the latest stable GitHub release. If a newer version is found, it opens the release page; download the `.popclipextz` asset and double-click it to install. You can also visit [GitHub Releases](https://github.com/monkey-sking/TextGenie/releases) directly. The release workflow builds the archive when a `v*` tag is pushed. You can also run the workflow manually and provide a version to create a release.
 
 PopClip extensions run when invoked, so this extension does not perform silent background update checks while idle. The update checker is restricted to dedicated trigger phrases so it does not clutter the toolbar for ordinary selected text.
+
+## 🧪 Test cases
+
+See [QA test cases and release checklist](./QA_TEST_CASES.md) for automated and manual verification scenarios.
 
 ## 👨‍💻 Development
 
