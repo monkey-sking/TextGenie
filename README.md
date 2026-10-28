@@ -8,17 +8,17 @@
 
 ## 🚀 Install
 
-**[⬇️ Download and install TextGenie](https://github.com/monkey-sking/TextGenie/releases/latest/download/TextGenie.popclipextz)**
+**[⬇️ Open downloads and install TextGenie](https://github.com/monkey-sking/TextGenie/releases)**
 
-Download the `.popclipextz` file and double-click it to install in PopClip. If no release has been published yet, see [Releases](https://github.com/monkey-sking/TextGenie/releases) or download the [source code](https://github.com/monkey-sking/TextGenie).
+Open the Releases page and download the `TextGenie.popclipextz` asset from the latest release, then double-click it to install in PopClip. A direct latest-version download link will work after the first release with that asset has been published.
 
 ## ✨ Features
 
-- **Currency conversion** — 15+ currencies; recognizes `$100`, `100 USD`, `100 美元`, and qualified symbols such as `JP¥3,000`. Same-currency sums such as `$58.83+56.26` are supported.
+- **Currency conversion** — recognizes qualified symbols such as `JP¥3,000` and same-currency sums such as `$58.83+56.26`.
 - **Translation** — Google, DeepL, OpenAI, Gemini, custom API, Bob, and Eudic integrations.
 - **Open URL** — recognizes URLs, IP addresses, and localhost.
-- **Terminal helper** — cleans shell prompts and safely fills commands into Terminal or iTerm2 without auto-running.
-- **Path recognition** — opens absolute, home, and relative paths in supported file managers.
+- **Terminal helper** — fills commands into Terminal or iTerm2 without auto-running.
+- **Path recognition** — recognizes absolute, home, and relative paths.
 
 ## ⚙️ Configuration
 
@@ -26,13 +26,11 @@ Configure translation service, target language, API key, target currency, prefer
 
 ## 🔄 Updates
 
-- Check [Releases](https://github.com/monkey-sking/TextGenie/releases) for the latest version and release notes.
-- The direct download link above always points to the latest published release asset.
-- PopClip extensions run when invoked, so this extension cannot reliably perform silent background update checks while idle. Automatic update notifications would require an explicit check action or a supported PopClip update mechanism.
+Check [GitHub Releases](https://github.com/monkey-sking/TextGenie/releases) for the latest version and release notes. The release workflow builds the archive when a `v*` tag is pushed. You can also run the workflow manually and provide a version to create a release.
+
+PopClip extensions run when invoked, so this extension cannot reliably perform silent background update checks while idle. A user-triggered “Check for Updates” action can be added separately.
 
 ## 👨‍💻 Development
-
-Build the extension archive from the repository root:
 
 ```bash
 cd src
