@@ -1,61 +1,42 @@
-# 🍌 文灵 (TextGenie) PopClip 扩展
+# 🍌 文灵（TextGenie）PopClip 扩展
 
 [🇺🇸 English](./README.md)
 
-**文灵** 是一款智能 PopClip 扩展，提供多种快捷操作，旨在提升您的 macOS 使用效率。
+**文灵** 是一款 macOS PopClip 多功能扩展，提供汇率转换、翻译、打开网址、终端命令和路径识别。
+
+## 🚀 直接安装
+
+**[⬇️ 下载并安装文灵 TextGenie](https://github.com/monkey-sking/TextGenie/releases/latest/download/TextGenie.popclipextz)**
+
+下载 `.popclipextz` 文件后双击，即可交给 PopClip 安装。如果暂时没有已发布的 Release，请查看 [版本发布页](https://github.com/monkey-sking/TextGenie/releases) 或 [项目源码](https://github.com/monkey-sking/TextGenie)。
 
 ## ✨ 功能特性
 
-### 🔗 打开网址
-- 自动识别 URL、IP 地址、localhost。
-- 在默认浏览器中打开。
+- **汇率转换**：支持多种货币；识别 `$100`、`100 USD`、`100 美元`、`JP¥3,000` 等格式；支持 `$58.83+56.26` 这类同币种加法后换汇。
+- **翻译**：支持 Google、DeepL、OpenAI、Gemini、自定义 API、Bob 和欧路词典。
+- **打开网址**：识别 URL、IP 地址和 localhost。
+- **终端增强**：清理命令前缀，并将命令填入 Terminal/iTerm2，执行前可再次检查，不会自动运行。
+- **路径识别**：识别绝对路径、家目录和相对路径，并在支持的文件管理器中打开。
 
-### 💱 汇率转换
-- 支持 15 种货币 (CNY, USD, EUR, JPY 等)。
-- 智能解析：`$100`、`100 USD`、`100 美元`。
-- 简洁预览：`100 USD = 720.50 CNY`。
+## ⚙️ 配置
 
-### 🅰️ 翻译
-- **翻译引擎**：Google、DeepL、OpenAI、Gemini、自定义 API。
-- **本地应用**：Bob、欧路词典同步跳转。
-- **目标语言**：自动、中文、英文、日文、韩文、法文、德文、西班牙文、俄文。
+在 PopClip 扩展设置中配置翻译服务、目标语言、API 密钥、目标货币、首选终端和文件管理器。
 
-### 🖥️ 终端增强
-- **优于官方**：
-  - **智能清洗**：自动剔除命令头部的 `$`, `#`, `>`, `%` 符号及多余空格。
-  - **海量识别**：完美支持 `python3`, `pip3`, `docker`, `kubectl`, `bun`, `systemctl` 等 100+ 常用开发工具。
-  - **安全填充**：直接将命令填入终端而非自动执行，方便您在执行前核对。
-- **支持应用**：Terminal.app、iTerm2 (原生优化)。
+## 🔄 更新
 
-### 📂 路径识别
-- **全格式支持**：自动识别绝对路径 (`/`)、家目录路径 (`~/`) 及相对路径 (`./`)。
-- **智能纠错补全**：自动补全缺失的斜杠（如 `Users/` -> `/Users/`）或波浪号（如 `Desktop/` -> `~/Desktop/`）。
-- **占位符支持**：支持 `%user%` 动态占位符，自动解析当前系统用户名。
-- **全家桶应用支持**：Finder, Path Finder, ForkLift, QSpace, Commander One, Marta。
-
-## 🛠 安装方法
-
-1. 下载 `TextGenie.popclipextz`
-2. 双击安装
-
-## ⚙️ 配置选项
-
-| 选项 | 说明 |
-| ---- | ---- |
-| 翻译服务 | Google、DeepL、OpenAI、Gemini、自定义、Bob、欧路词典 |
-| 目标语言 | 自动、中文、英文、日文等 |
-| API 密钥 | DeepL、OpenAI、Gemini、自定义 API 需要 |
-| 目标货币 | CNY、USD、EUR、GBP、JPY 等 |
-| 首选终端 | Terminal, iTerm2, Auto 自动检测 |
-| 首选文件管理器 | Finder, Path Finder, ForkLift, QSpace, Commander One, Marta |
-| 在新标签页打开 | 在终端或文件管理器中新建标签页打开 |
+- 在 [Releases 版本发布页](https://github.com/monkey-sking/TextGenie/releases)查看最新版本和更新说明。
+- 上方直装链接会指向最新一次已发布版本的安装包。
+- PopClip 扩展通常在用户触发动作时运行，空闲时无法可靠地静默后台检查更新。若要主动提醒更新，需要增加显式的“检查更新”动作，或使用 PopClip 支持的更新机制。
 
 ## 👨‍💻 开发构建
 
+在项目根目录执行：
+
 ```bash
-cd src && zip -r ../extensions/TextGenie.popclipextz TextGenie.popclipext/
+cd src
+zip -r ../TextGenie.popclipextz TextGenie.popclipext/
 ```
 
 ## 📜 许可证
 
-MIT
+详见 [LICENSE](LICENSE)。
