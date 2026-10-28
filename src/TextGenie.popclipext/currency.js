@@ -64,14 +64,14 @@ function detectTokenCurrency(token, localeCurrency) {
     }
 
     const qualified = [
-        { re: /(?:JP|JPN)\\s*[¥￥]/i, code: 'JPY' },
-        { re: /(?:CN|CNY)\\s*[¥￥]/i, code: 'CNY' },
-        { re: /HK\\s*\\$/i, code: 'HKD' },
-        { re: /NT\\s*\\$/i, code: 'TWD' },
-        { re: /(?:A|AUD)\\s*\\$/i, code: 'AUD' },
-        { re: /(?:C|CAD)\\s*\\$/i, code: 'CAD' },
-        { re: /(?:S|SGD)\\s*\\$/i, code: 'SGD' },
-        { re: /US\\s*\\$/i, code: 'USD' }
+        { re: /(?:JP|JPN)\s*[¥￥]/i, code: 'JPY' },
+        { re: /(?:CN|CNY)\s*[¥￥]/i, code: 'CNY' },
+        { re: /HK\s*\$/i, code: 'HKD' },
+        { re: /NT\s*\$/i, code: 'TWD' },
+        { re: /(?:A|AUD)\s*\$/i, code: 'AUD' },
+        { re: /(?:C|CAD)\s*\$/i, code: 'CAD' },
+        { re: /(?:S|SGD)\s*\$/i, code: 'SGD' },
+        { re: /US\s*\$/i, code: 'USD' }
     ];
     for (const q of qualified) if (q.re.test(token)) found.add(q.code);
 
@@ -80,12 +80,12 @@ function detectTokenCurrency(token, localeCurrency) {
     }
 
     // A bare yen sign is ambiguous: use device locale only for CNY/JPY locales.
-    if (/[¥￥]/.test(token) && !/(?:JP|JPN|CN|CNY)\\s*[¥￥]/i.test(token)) {
+    if (/[¥￥]/.test(token) && !/(?:JP|JPN|CN|CNY)\s*[¥￥]/i.test(token)) {
         if (localeCurrency === 'JPY' || localeCurrency === 'CNY') found.add(localeCurrency);
         else found.add('CNY'); // Conservative, documented fallback for ambiguous yen.
     }
     // A bare dollar sign follows the device locale only when it is a dollar currency.
-    if (token.includes('$') && !/(?:US|HK|NT|A|AUD|C|CAD|S|SGD)\\s*\\$/i.test(token)) {
+    if (token.includes('$') && !/(?:US|HK|NT|A|AUD|C|CAD|S|SGD)\s*\$/i.test(token)) {
         const dollarCurrencies = ['USD', 'HKD', 'TWD', 'AUD', 'CAD', 'SGD'];
         found.add(dollarCurrencies.includes(localeCurrency) ? localeCurrency : 'USD');
     }
@@ -108,13 +108,13 @@ function parseAmounts(input) {
         const currency = detectTokenCurrency(piece, locale.currency) || inheritedCurrency || locale.currency;
         let numberText = piece
             .replace(new RegExp('\\b(?:' + CODE_PATTERN + ')\\b', 'ig'), '')
-            .replace(/(?:JP|JPN|CN|CNY|HK|HKD|NT|AUD|A|CAD|C|SGD|S|US)\\s*(?=[$¥￥])/ig, '')
+            .replace(/(?:JP|JPN|CN|CNY|HK|HKD|NT|AUD|A|CAD|C|SGD|S|US)\s*(?=[$¥￥])/ig, '')
             .replace(/[$¥￥€£₹₩₽฿]/g, '');
         for (const name of Object.keys(CN_CURRENCY_NAMES).sort((a, b) => b.length - a.length)) {
             numberText = numberText.replaceAll(name, '');
         }
-        numberText = numberText.replace(/[()\\s]/g, '');
-        if (!/^-?\\d+(?:\\.\\d+)?$/.test(numberText)) {
+        numberText = numberText.replace(/[()\s]/g, '');
+        if (!/^-?\d+(?:\.\d+)?$/.test(numberText)) {
             throw new Error('无法识别金额「' + piece + '」。请使用 100 USD、€50、JP¥3,000 等格式。');
         }
         const amount = Number(numberText);
