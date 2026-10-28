@@ -2,6 +2,8 @@ name: Build and publish PopClip Extension
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*"
   workflow_dispatch:
@@ -19,7 +21,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Validate extension manifest
         run: |
@@ -46,7 +48,15 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           for file in src/TextGenie.popclipext/*.js; do
-            node --check "$file"
+            node - "$file" <<'NODE'
+          const fs = require('node:fs');
+          const vm = require('node:vm');
+          const file = process.argv[2];
+          const source = fs.readFileSync(file, 'utf8');
+          // PopClip evaluates action scripts in an async context; parse in the same context
+          // so top-level await/return supported by PopClip are not false positives in Node CJS.
+          new vm.Script('(async function popclipAction() {\\n' + source + '\\n})', { filename: file });
+          NODE
           done
 
       - name: Build extension archive
@@ -72,6 +82,6 @@ jobs:
             v*) TAG="$VERSION" ;;
             *) TAG="v$VERSION" ;;
           esac
-          gh release create "$TAG" TextGenie.popclipextz \
-            --title "TextGenie $TAG" \
+          gh release create "$TAG" TextGenie.popclipextz \\
+            --title "TextGenie $TAG" \\
             --generate-notes
