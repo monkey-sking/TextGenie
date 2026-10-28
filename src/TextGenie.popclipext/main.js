@@ -269,20 +269,27 @@ async function translateCustom(text, targetLang, apiKey, apiUrl, model) {
         headers.Authorization = 'Bearer ' + apiKey;
     }
 
-    const response = await axios.post(requestUrl,
-        {
-            model: model || 'gpt-4o-mini',
+    const isResponsesAPI = /\/responses\/?$/i.test(new URL(requestUrl).pathname);
+    const payload = isResponsesAPI
+        ? {
+            model,
+            instructions: getPrompt(targetLang),
+            input: text,
+            max_output_tokens: 1000
+        }
+        : {
+            model,
             messages: [
                 { role: 'system', content: getPrompt(targetLang) },
                 { role: 'user', content: text }
             ],
             max_tokens: 1000
-        },
-        {
-            headers,
-            timeout: HTTP_TIMEOUT_MS
-        }
-    );
+        };
+
+    const response = await axios.post(requestUrl, payload, {
+        headers,
+        timeout: HTTP_TIMEOUT_MS
+    });
 
     return extractResponseText(response.data) || 'Custom API translation failed';
 }
