@@ -91,7 +91,7 @@ async function runCurrency(input, targetCurrency = 'USD') {
   const popclipRegex = (pattern) => {
     let flags = '';
     while (pattern.startsWith('(?')) {
-      const match = pattern.match(/^\\(\\?([ims]+)\\)/);
+      const match = pattern.match(/^\(\?([ims]+)\)/);
       if (!match) break;
       flags += match[1];
       pattern = pattern.slice(match[0].length);
@@ -105,8 +105,8 @@ async function runCurrency(input, targetCurrency = 'USD') {
   assert.equal(matches('url-encode.js', '普通中文文本'), false, 'URL Encode should not show for ordinary CJK text');
   assert.equal(matches('url-encode.js', 'https://example.com/a?x=1'), true, 'URL Encode should show for URL-like text');
   assert.equal(matches('base64-encode.js', '普通中文文本'), false, 'Base64 Encode should not show for ordinary single-line text');
-  assert.equal(matches('base64-encode.js', '第一行\\n第二行'), true, 'Base64 Encode should show for multiline text');
-  assert.equal(matches('base64-encode.js', '{\\n  "a": 1\\n}'), false, 'Base64 Encode should stay hidden for JSON');
+  assert.equal(matches('base64-encode.js', '第一行\n第二行'), true, 'Base64 Encode should show for multiline text');
+  assert.equal(matches('base64-encode.js', '{\n  "a": 1\n}'), false, 'Base64 Encode should stay hidden for JSON');
   assert.equal(matches('base64-decode.js', 'SGVsbG8gV29ybGQh'), false, 'short unpadded base64 should not overmatch ordinary text');
   assert.equal(matches('base64-decode.js', 'VGhpcyBpcyBhIGxvbmdlciBiYXNlNjQgc3RyaW5nLg=='), true, 'Base64 Decode should show for long encoded strings');
 
