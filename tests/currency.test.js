@@ -119,7 +119,8 @@ async function runCurrency(input, targetCurrency = 'USD') {
   assert.equal(matches('base64-encode.js', '普通中文文本'), false, 'Base64 Encode should not show for ordinary single-line text');
   assert.equal(matches('base64-encode.js', '第一行\n第二行'), true, 'Base64 Encode should show for multiline text');
   assert.equal(matches('base64-encode.js', '{\n  "a": 1\n}'), false, 'Base64 Encode should stay hidden for JSON');
-  assert.equal(matches('base64-decode.js', 'SGVsbG8gV29ybGQh'), false, 'short unpadded base64 should not overmatch ordinary text');
+  assert.equal(matches('base64-decode.js', 'Hello'), false, 'short ordinary words should not trigger Base64 Decode');
+  assert.equal(matches('base64-decode.js', 'SGVsbG8gV29ybGQh'), true, 'valid unpadded Base64 should be recognized');
   assert.equal(matches('base64-decode.js', 'VGhpcyBpcyBhIGxvbmdlciBiYXNlNjQgc3RyaW5nLg=='), true, 'Base64 Decode should show for long encoded strings');
 
   for (const action of config.actions) {
