@@ -59,6 +59,12 @@ jobs:
           NODE
           done
 
+      - name: Check AppleScript syntax
+        run: |
+          for file in src/TextGenie.popclipext/*.applescript; do
+            osacompile -o "$RUNNER_TEMP/$(basename "${file%.applescript}").scpt" "$file"
+          done
+
       - name: Build extension archive
         run: |
           cd src
