@@ -19,10 +19,10 @@ const RE_RUSSIAN = /[\u0400-\u04ff]/;
 function detectLanguage(t) {
     const text = String(t || '');
     const counts = {
-        ja: (text.match(/[\\u3040-\\u309f\\u30a0-\\u30ff]/g) || []).length,
-        ko: (text.match(/[\\uac00-\\ud7af]/g) || []).length,
-        zh: (text.match(/[\\u4e00-\\u9fa5]/g) || []).length,
-        ru: (text.match(/[\\u0400-\\u04ff]/g) || []).length
+        ja: (text.match(/[\u3040-\u309f\u30a0-\u30ff]/g) || []).length,
+        ko: (text.match(/[\uac00-\ud7af]/g) || []).length,
+        zh: (text.match(/[\u4e00-\u9fa5]/g) || []).length,
+        ru: (text.match(/[\u0400-\u04ff]/g) || []).length
     };
     const latin = (text.match(/[A-Za-z]/g) || []).length;
     const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1]);
