@@ -1,10 +1,15 @@
-name: Build PopClip Extension
+name: Build and publish PopClip Extension
 
 on:
   push:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, for example 1.0.0 (leave empty to build only)"
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -19,9 +24,20 @@ jobs:
         run: |
           cd src
           zip -r ../TextGenie.popclipextz TextGenie.popclipext/
-      - name: Publish GitHub Release
+      - name: Publish tagged release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: TextGenie.popclipextz
           generate_release_notes: true
+      - name: Create release from manual dispatch
+        if: github.event_name == 'workflow_dispatch' && inputs.version != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          case "$VERSION" in
+            v*) TAG="$VERSION" ;;
+            *) TAG="v$VERSION" ;;
+          esac
+          gh release create "$TAG" TextGenie.popclipextz             --title "TextGenie $TAG"             --generate-notes
