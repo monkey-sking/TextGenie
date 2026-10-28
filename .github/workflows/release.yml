@@ -60,6 +60,9 @@ jobs:
           done
 
 
+      - name: Run currency regression tests
+        run: node tests/currency.test.js
+
       - name: Build extension archive
         run: |
           cd src
