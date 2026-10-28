@@ -1,65 +1,44 @@
 # 🍌 TextGenie for PopClip
 
-<!-- badges:start -->
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)](https://github.com/monkey-sking/TextGenie/blob/main/LICENSE) [![Last commit](https://img.shields.io/github/last-commit/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/commits/main) [![JavaScript](https://img.shields.io/github/languages/top/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/search?l=JavaScript) [![views](https://hits.sh/github.com/monkey-sking/TextGenie.svg?style=flat-square&label=views&color=0e75b6)](https://github.com/monkey-sking/TextGenie)
-<!-- badges:end -->
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)](LICENSE) [![Last commit](https://img.shields.io/github/last-commit/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/commits/main)
 
 [🇨🇳 中文版](./README_zh.md)
 
-**TextGenie** is a magical PopClip extension with multiple intelligent actions.
+**TextGenie** is a multi-action PopClip extension for macOS: currency conversion, translation, URL opening, terminal commands, and path recognition.
+
+## 🚀 Install
+
+**[⬇️ Download and install TextGenie](https://github.com/monkey-sking/TextGenie/releases/latest/download/TextGenie.popclipextz)**
+
+Download the `.popclipextz` file and double-click it to install in PopClip. If no release has been published yet, see [Releases](https://github.com/monkey-sking/TextGenie/releases) or download the [source code](https://github.com/monkey-sking/TextGenie).
 
 ## ✨ Features
 
-### 🔗 Open URL
-- Auto-detects URLs, IPs, localhost.
-- Opens in default browser.
-
-### 💱 Currency Conversion
-- 15 currencies (CNY, USD, EUR, JPY, etc.).
-- Smart parsing: `$100`, `100 USD`, `100 美元`.
-- Clean output: `100 USD = 720.50 CNY`.
-
-### 🅰️ Translation
-- **Engines**: Google, DeepL, OpenAI, Gemini, Custom API.
-- **Apps**: Bob, Eudic integration.
-- **Languages**: Auto, Chinese, English, Japanese, Korean, French, German, Spanish, Russian.
-
-### 🖥️ Terminal Action
-- **Better than Official**:
-  - **Smart Cleaning**: Automatically strips leading prompts (`$`, `#`, `>`, `%`) and extra whitespace.
-  - **Modern Recognition**: Supports `python3`, `pip3`, `docker`, `kubectl`, `bun`, `systemctl`, `vercel`, and 100+ dev tools.
-  - **Non-Destructive**: Fills the command in Terminal/iTerm2 without auto-running, allowing for review.
-- **Support**: Terminal.app, iTerm2 (Native optimized).
-
-### 📂 Path Recognition
-- **Universal Recognition**: Detects absolute (`/`), home (`~/`), and relative (`./`) paths.
-- **Smart Auto-Correction**: Automatically prepends `/` or `~/` to common patterns (e.g., `Users/`, `Desktop/`, `Downloads/`).
-- **Placeholder Support**: Supports `%user%` placeholder for dynamic resolution.
-- **Wide App Support**: Finder, Path Finder, ForkLift, QSpace, Commander One, Marta.
-
-## 🛠 Installation
-
-1. Download `TextGenie.popclipextz`
-2. Double-click to install
+- **Currency conversion** — 15+ currencies; recognizes `$100`, `100 USD`, `100 美元`, and qualified symbols such as `JP¥3,000`. Same-currency sums such as `$58.83+56.26` are supported.
+- **Translation** — Google, DeepL, OpenAI, Gemini, custom API, Bob, and Eudic integrations.
+- **Open URL** — recognizes URLs, IP addresses, and localhost.
+- **Terminal helper** — cleans shell prompts and safely fills commands into Terminal or iTerm2 without auto-running.
+- **Path recognition** — opens absolute, home, and relative paths in supported file managers.
 
 ## ⚙️ Configuration
 
-| Option | Description |
-| ------ | ----------- |
-| Translation Service | Google, DeepL, OpenAI, Gemini, Custom, Bob, Eudic |
-| Translation Target | Auto, Chinese, English, Japanese, etc. |
-| API Key | Required for DeepL, OpenAI, Gemini, Custom |
-| Target Currency | CNY, USD, EUR, GBP, JPY, etc. |
-| Preferred Terminal | Terminal, iTerm2, Auto |
-| Preferred File Manager | Finder, Path Finder, ForkLift, QSpace, Commander One, Marta |
-| Use New Tab | Open terminal/path in a new tab |
+Configure translation service, target language, API key, target currency, preferred terminal and file manager in PopClip extension settings.
+
+## 🔄 Updates
+
+- Check [Releases](https://github.com/monkey-sking/TextGenie/releases) for the latest version and release notes.
+- The direct download link above always points to the latest published release asset.
+- PopClip extensions run when invoked, so this extension cannot reliably perform silent background update checks while idle. Automatic update notifications would require an explicit check action or a supported PopClip update mechanism.
 
 ## 👨‍💻 Development
 
+Build the extension archive from the repository root:
+
 ```bash
-cd src && zip -r ../extensions/TextGenie.popclipextz TextGenie.popclipext/
+cd src
+zip -r ../TextGenie.popclipextz TextGenie.popclipext/
 ```
 
 ## 📜 License
 
-MIT
+See [LICENSE](LICENSE).
