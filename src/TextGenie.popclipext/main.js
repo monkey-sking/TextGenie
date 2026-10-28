@@ -57,7 +57,7 @@ function getPrompt(targetLang) {
     if (customPrompt) {
         return customPrompt.replace(/{lang}/g, langName);
     }
-    return 'Translate to ' + langName + '. Output translation only.';
+    return 'Translate to ' + langName + '. Output translation only. Preserve original paragraph breaks, list structure, Markdown formatting, URLs, code blocks, inline code, placeholders, and variable names. Do not translate code or identifiers unless they are clearly natural-language text.';
 }
 
 function joinTextParts(parts) {
