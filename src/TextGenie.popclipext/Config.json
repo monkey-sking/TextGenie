@@ -398,7 +398,7 @@
       "requirements": [
         "text"
       ],
-      "regular expression": "(?s).*(https?://|www\\\\.|[\\\\s\\\\u0080-\\\\uffff]|[&=+#%?]).*"
+      "regular expression": "(?s).*(https?://|www\\.|[\\s\\u0080-\\uffff]|[&=+#%?]).*"
     },
     {
       "title": {
@@ -424,7 +424,7 @@
       "requirements": [
         "text"
       ],
-      "regular expression": "(?s).*(?:[\\\\u0080-\\\\uffff]|[\\\\r\\\\n\\\\t]).*"
+      "regular expression": "(?s).*(?:[\\u0080-\\uffff]|[\\r\\n\\t]).*"
     },
     {
       "title": {
@@ -437,7 +437,7 @@
       "requirements": [
         "text"
       ],
-      "regular expression": "(?s)^[A-Za-z0-9+/]{8,}={0,2}\\\\s*$"
+      "regular expression": "(?s)^[A-Za-z0-9+/]{8,}={0,2}\\s*$"
     }
   ]
 }
