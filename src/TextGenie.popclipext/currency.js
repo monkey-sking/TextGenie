@@ -1,7 +1,7 @@
 // PopClip Currency Converter
 const axios = require('axios');
 
-const text = popclip.input.text.trim();
+const text = String(popclip.input.text || '').trim();
 const targetCurrency = popclip.options.targetCurrency || 'CNY';
 const targetLanguage = popclip.options.targetLanguage || 'auto';
 const HTTP_TIMEOUT_MS = 8000;
@@ -35,7 +35,8 @@ const QUALIFIED_SYMBOLS = [
 const CN_NAMES = {
     CNY: '人民币', USD: '美元', EUR: '欧元', GBP: '英镑', JPY: '日元',
     HKD: '港币', KRW: '韩元', TWD: '台币', SGD: '新加坡元',
-    AUD: '澳元', CAD: '加元', CHF: '瑞郎', NZD: '纽元', MYR: '马来西亚林吉特', THB: '泰铢', INR: '卢比', RUB: '卢布'
+    AUD: '澳元', CAD: '加元', CHF: '瑞郎', NZD: '纽元', MYR: '马来西亚林吉特',
+    THB: '泰铢', INR: '卢比', RUB: '卢布'
 };
 const CODES_PATTERN = 'USD|EUR|GBP|JPY|CNY|HKD|AUD|CAD|CHF|SGD|NZD|INR|KRW|THB|MYR|RUB|TWD';
 
@@ -57,7 +58,8 @@ function parseCurrency(input) {
     const hasQualifiedDollar = /(?:US|HK|NT|A|AUD|C|CAD|S|SGD)\s*\$/i.test(cleaned);
     for (const [symbol, code] of Object.entries(CURRENCY_SYMBOLS)) {
         if ((symbol === '¥' || symbol === '￥') && hasQualifiedYen) continue;
-        if (symbol === '
+        if (symbol === '$' && hasQualifiedDollar) continue;
+        if (cleaned.includes(symbol)) detectedCurrencies.add(code);
     }
 
     if (detectedCurrencies.size > 1) {
@@ -97,7 +99,9 @@ async function convert() {
             headers: { 'Accept': 'application/json' }
         });
         const rates = response.data && response.data.rates;
-        if (!rates || typeof rates[targetCurrency] !== 'number' || !Number.isFinite(rates[targetCurrency])) throw new Error('汇率服务未返回有效汇率，请稍后重试');
+        if (!rates || typeof rates[targetCurrency] !== 'number' || !Number.isFinite(rates[targetCurrency])) {
+            throw new Error('汇率服务未返回有效汇率，请稍后重试');
+        }
 
         const converted = (amount * rates[targetCurrency]).toFixed(2);
         const formattedAmount = amount.toLocaleString('en-US', { maximumFractionDigits: 2 });
