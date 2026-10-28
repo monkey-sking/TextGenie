@@ -2,7 +2,7 @@
 -- Optimized paste strategy for Terminal.app (which lacks native 'fill without run' API)
 
 set rawText to "{popclip text}"
-set cleanedCmd to do shell script ("/bin/echo " & quoted form of rawText & " | /usr/bin/sed -E 's/^[[:space:]$#>%]+//'")
+set cleanedCmd to do shell script ("/usr/bin/printf '%s' " & quoted form of rawText & " | /usr/bin/sed -E 's/^[[:space:]$#>%]+//'")
 
 try
     with timeout of 5 seconds
