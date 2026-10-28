@@ -52,6 +52,42 @@ async function runCurrency(input, targetCurrency = 'USD') {
   }
   const decode = configActions.find(item => item['javascript file'] === 'url-decode.js')['regular expression'];
   assert.match('%20'.match(new RegExp(decode.replace(/^\(\?i\)/, ''), 'i'))?.[0] || '', /%20/);
+  async function runCustomTranslation(apiUrl) {
+    const calls = [];
+    const axios = {
+      post: async (url, payload) => {
+        calls.push({ url, payload });
+        return { data: { output_text: 'translated text' } };
+      },
+      get: async () => { throw new Error('Unexpected GET'); }
+    };
+    const popclip = {
+      input: { text: 'source text' },
+      options: {
+        translationService: 'custom',
+        targetLanguage: 'en',
+        customApiUrl: apiUrl,
+        customModel: 'test-model',
+        apiKey: ''
+      }
+    };
+    const source = fs.readFileSync(path.join(root, 'main.js'), 'utf8');
+    const action = new AsyncFunction('require', 'popclip', source);
+    const output = await action(name => {
+      if (name !== 'axios') throw new Error('Unexpected dependency: ' + name);
+      return axios;
+    }, popclip);
+    return { output, call: calls[0] };
+  }
+  const responsesTranslation = await runCustomTranslation('https://example.com/v1/responses');
+  assert.equal(responsesTranslation.output, 'translated text');
+  assert.equal(responsesTranslation.call.payload.input, 'source text');
+  assert.equal(responsesTranslation.call.payload.model, 'test-model');
+  assert.ok(!('messages' in responsesTranslation.call.payload), 'Responses API must not receive chat-completions payload');
+  const chatTranslation = await runCustomTranslation('https://example.com/v1/chat/completions');
+  assert.equal(chatTranslation.call.payload.messages[1].content, 'source text');
+  assert.ok(!('input' in chatTranslation.call.payload), 'Chat Completions API must receive messages payload');
+
   const popclipRegex = (pattern) => {
     let flags = '';
     while (pattern.startsWith('(?')) {
