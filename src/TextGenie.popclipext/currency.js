@@ -162,7 +162,7 @@ async function convert() {
         const localeInfo = configuredTarget === 'AUTO'
             ? '目标币种根据设备地区 ' + parsed.locale.region + ' 自动选择；可在 PopClip 设置中手动指定。'
             : '目标币种由 PopClip 设置指定。';
-        return lines.join('\\n') + '\\n\\n' + header + '：' + totalText + ' ' + targetName + '\\n' + localeInfo;
+        return lines.join('\n') + '\n\n' + header + '：' + totalText + ' ' + targetName + '\n' + localeInfo;
     } catch (e) {
         const status = e.response && e.response.status;
         let message = e.message || '未知错误';
