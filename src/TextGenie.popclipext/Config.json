@@ -340,6 +340,80 @@
       },
       "icon": "update.svg",
       "javascript file": "check-updates.js"
+    },
+    {
+      "title": {
+        "en": "Format JSON",
+        "zh-Hans": "格式化 JSON"
+      },
+      "icon": "icon.svg",
+      "javascript file": "format-json.js",
+      "after": "preview-result",
+      "requirements": [
+        "text"
+      ],
+      "regular expression": "(?s)^\\s*[\\[{].*[\\]}]\\s*$"
+    },
+    {
+      "title": {
+        "en": "Minify JSON",
+        "zh-Hans": "压缩 JSON"
+      },
+      "icon": "icon.svg",
+      "javascript file": "minify-json.js",
+      "after": "preview-result",
+      "requirements": [
+        "text"
+      ],
+      "regular expression": "(?s)^\\s*[\\[{].*[\\]}]\\s*$"
+    },
+    {
+      "title": {
+        "en": "URL Encode",
+        "zh-Hans": "URL 编码"
+      },
+      "icon": "icon.svg",
+      "javascript file": "url-encode.js",
+      "after": "preview-result",
+      "requirements": [
+        "text"
+      ]
+    },
+    {
+      "title": {
+        "en": "URL Decode",
+        "zh-Hans": "URL 解码"
+      },
+      "icon": "icon.svg",
+      "javascript file": "url-decode.js",
+      "after": "preview-result",
+      "requirements": [
+        "text"
+      ]
+    },
+    {
+      "title": {
+        "en": "Base64 Encode",
+        "zh-Hans": "Base64 编码"
+      },
+      "icon": "icon.svg",
+      "javascript file": "base64-encode.js",
+      "after": "preview-result",
+      "requirements": [
+        "text"
+      ]
+    },
+    {
+      "title": {
+        "en": "Base64 Decode",
+        "zh-Hans": "Base64 解码"
+      },
+      "icon": "icon.svg",
+      "javascript file": "base64-decode.js",
+      "after": "preview-result",
+      "requirements": [
+        "text"
+      ]
     }
   ]
 }
