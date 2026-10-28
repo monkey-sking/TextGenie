@@ -1,5 +1,7 @@
 # 文灵（TextGenie）PopClip 扩展
 
+[![CI](https://github.com/monkey-sking/TextGenie/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/monkey-sking/TextGenie/actions/workflows/release.yml) [![Latest Release](https://img.shields.io/github/v/release/monkey-sking/TextGenie?display_name=tag&style=flat-square)](https://github.com/monkey-sking/TextGenie/releases/latest) [![Downloads](https://img.shields.io/github/downloads/monkey-sking/TextGenie/total?style=flat-square)](https://github.com/monkey-sking/TextGenie/releases) [![License](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)](LICENSE) [![Last commit](https://img.shields.io/github/last-commit/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/commits/main)
+
 [🇺🇸 English](./README.md)
 
 **文灵** 是一款 macOS PopClip 多功能扩展，提供汇率转换、翻译、打开网址、终端命令和路径识别。
@@ -28,6 +30,10 @@
 选中专用触发词 **「检查文灵更新」** 或 `textgenie update`，即可检查 GitHub 上最新的正式版本；发现新版本时会打开版本发布页。下载最新的 `.popclipextz` 后双击安装即可。也可以直接打开 [Releases 版本发布页](https://github.com/monkey-sking/TextGenie/releases)查看更新说明。推送 `v*` 版本标签会自动构建并发布安装包；也可以在 GitHub Actions 中手动运行发布工作流并填写版本号。
 
 PopClip 扩展通常在用户触发动作时运行，因此不会在空闲时静默后台检查更新。当前通过专用触发词触发更新检查，避免它在普通选中文本时占据工具栏。
+
+## 🧪 测试用例
+
+自动与人工测试场景见[测试用例与发布前验收清单](./QA_TEST_CASES.md)。
 
 ## 👨‍💻 开发构建
 
