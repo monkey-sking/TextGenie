@@ -111,7 +111,7 @@ async function runCurrency(input, targetCurrency = 'USD') {
     return new RegExp(pattern, [...new Set(flags)].join(''));
   };
   const matches = (file, sample) => {
-    const action = config.actions.find(item => item['javascript file'] === file);
+    const action = config.actions.find(item => item['javascript file'] === file || item['applescript file'] === file);
     return popclipRegex(action['regular expression']).test(sample);
   };
   assert.equal(matches('url-encode.js', '普通中文文本'), false, 'URL Encode should not show for ordinary CJK text');
