@@ -1,4 +1,4 @@
-# 🍌 文灵（TextGenie）PopClip 扩展
+# 文灵（TextGenie）PopClip 扩展
 
 [🇺🇸 English](./README.md)
 
@@ -25,9 +25,9 @@
 
 ## 🔄 更新
 
-在 PopClip 中选择 **「检查更新」** 动作，可以检查 GitHub 上最新的正式版本；发现新版本时会打开版本发布页。下载最新的 `.popclipextz` 后双击安装即可。也可以直接打开 [Releases 版本发布页](https://github.com/monkey-sking/TextGenie/releases)查看更新说明。推送 `v*` 版本标签会自动构建并发布安装包；也可以在 GitHub Actions 中手动运行发布工作流并填写版本号。
+选中专用触发词 **「检查文灵更新」** 或 `textgenie update`，即可检查 GitHub 上最新的正式版本；发现新版本时会打开版本发布页。下载最新的 `.popclipextz` 后双击安装即可。也可以直接打开 [Releases 版本发布页](https://github.com/monkey-sking/TextGenie/releases)查看更新说明。推送 `v*` 版本标签会自动构建并发布安装包；也可以在 GitHub Actions 中手动运行发布工作流并填写版本号。
 
-PopClip 扩展通常在用户触发动作时运行，因此不会在空闲时静默后台检查更新。当前提供用户主动触发的「检查更新」动作：检查最新正式版本，并在发现更新时打开发布页。
+PopClip 扩展通常在用户触发动作时运行，因此不会在空闲时静默后台检查更新。当前通过专用触发词触发更新检查，避免它在普通选中文本时占据工具栏。
 
 ## 👨‍💻 开发构建
 
