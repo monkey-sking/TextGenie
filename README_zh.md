@@ -8,7 +8,7 @@
 
 **[⬇️ 打开下载页面并安装文灵 TextGenie](https://github.com/monkey-sking/TextGenie/releases)**
 
-进入 Releases 版本发布页，下载最新版本附件中的 `TextGenie.popclipextz`，然后双击安装到 PopClip。只有首次发布并上传安装包后，固定的“最新版本直装”链接才能正常工作。
+进入 [Releases 版本发布页](https://github.com/monkey-sking/TextGenie/releases) 下载最新版本附件中的 `TextGenie.popclipextz`，然后双击安装到 PopClip。首次 Release 发布后，也可以使用[最新版直装链接](https://github.com/monkey-sking/TextGenie/releases/latest/download/TextGenie.popclipextz)。
 
 ## ✨ 功能特性
 
