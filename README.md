@@ -14,7 +14,7 @@ Open the [Releases page](https://github.com/monkey-sking/TextGenie/releases) and
 
 ## ✨ Features
 
-- **Currency conversion** — recognizes qualified symbols such as `JP¥3,000` and same-currency sums such as `$58.83+56.26`; offers 17 target currencies and clearer network/rate-limit/rate-response errors.
+- **Currency conversion** — supports same-currency and mixed-currency sums, e.g. `$100+€50+JP¥3,000`. The target currency defaults from the device locale and can be overridden in PopClip settings. Unmarked amounts inherit the previous amount's currency; if the first amount is unmarked, the device-region currency is used.
 - **Translation** — Google, DeepL, OpenAI, Gemini, custom API, Bob, and Eudic integrations, with categorized timeout/network/auth/model/rate-limit/server errors and prompts that preserve Markdown, code, URLs, and variable names.
 - **Open URL** — recognizes URLs, IP addresses, and localhost.
 - **Terminal helper** — fills commands into Terminal or iTerm2 without auto-running; recognizes Git, Node.js, Python, Docker, Kubernetes, Swift/Xcode, Homebrew, Codex, Claude Code, OpenCode, Gemini CLI, and common network/system diagnostics. Supports the current window or a new tab.
