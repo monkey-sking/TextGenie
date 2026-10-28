@@ -133,7 +133,16 @@
         "JPY",
         "HKD",
         "KRW",
-        "TWD"
+        "TWD",
+        "SGD",
+        "AUD",
+        "CAD",
+        "CHF",
+        "NZD",
+        "INR",
+        "THB",
+        "MYR",
+        "RUB"
       ],
       "valueLabels": [
         "¥ CNY",
@@ -143,7 +152,16 @@
         "¥ JPY",
         "HK$ HKD",
         "₩ KRW",
-        "NT$ TWD"
+        "NT$ TWD",
+        "S$ SGD",
+        "A$ AUD",
+        "C$ CAD",
+        "CHF",
+        "NZ$ NZD",
+        "₹ INR",
+        "฿ THB",
+        "RM MYR",
+        "₽ RUB"
       ],
       "defaultValue": "CNY"
     },
