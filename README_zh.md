@@ -17,6 +17,7 @@
 - **打开网址**：识别 URL、IP 地址和 localhost。
 - **终端增强**：将命令填入 Terminal/iTerm2，默认不自动执行；识别 Git、Node.js、Python、Docker、Kubernetes、Swift/Xcode、Homebrew、Codex、Claude Code、OpenCode、Gemini CLI、常见网络诊断与系统维护命令等。支持复用当前窗口或新标签页。
 - **路径识别**：识别绝对路径、家目录和相对路径。
+- **开发者文本工具**：JSON 格式化/压缩、URL 编码/解码、Base64 编码/解码；处理结果复制到剪贴板。
 
 ## ⚙️ 配置
 
@@ -26,7 +27,7 @@
 
 在 PopClip 中选择 **「检查更新」** 动作，可以检查 GitHub 上最新的正式版本；发现新版本时会打开版本发布页。下载最新的 `.popclipextz` 后双击安装即可。也可以直接打开 [Releases 版本发布页](https://github.com/monkey-sking/TextGenie/releases)查看更新说明。推送 `v*` 版本标签会自动构建并发布安装包；也可以在 GitHub Actions 中手动运行发布工作流并填写版本号。
 
-PopClip 扩展通常在用户触发动作时运行，空闲时无法可靠地静默后台检查更新。当前采用用户主动触发的「检查更新」动作。
+PopClip 扩展通常在用户触发动作时运行，因此不会在空闲时静默后台检查更新。当前提供用户主动触发的「检查更新」动作：检查最新正式版本，并在发现更新时打开发布页。
 
 ## 👨‍💻 开发构建
 
