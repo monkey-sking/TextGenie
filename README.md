@@ -14,11 +14,12 @@ Open the [Releases page](https://github.com/monkey-sking/TextGenie/releases) and
 
 ## ✨ Features
 
-- **Currency conversion** — recognizes qualified symbols such as `JP¥3,000` and same-currency sums such as `$58.83+56.26`.
-- **Translation** — Google, DeepL, OpenAI, Gemini, custom API, Bob, and Eudic integrations.
+- **Currency conversion** — recognizes qualified symbols such as `JP¥3,000` and same-currency sums such as `$58.83+56.26`; offers 17 target currencies and clearer network/rate-limit/rate-response errors.
+- **Translation** — Google, DeepL, OpenAI, Gemini, custom API, Bob, and Eudic integrations, with categorized timeout/network/auth/model/rate-limit/server errors and prompts that preserve Markdown, code, URLs, and variable names.
 - **Open URL** — recognizes URLs, IP addresses, and localhost.
 - **Terminal helper** — fills commands into Terminal or iTerm2 without auto-running; recognizes Git, Node.js, Python, Docker, Kubernetes, Swift/Xcode, Homebrew, Codex, Claude Code, OpenCode, Gemini CLI, and common network/system diagnostics. Supports the current window or a new tab.
 - **Path recognition** — recognizes absolute, home, and relative paths.
+- **Developer text tools** — format/minify JSON, URL encode/decode, and Base64 encode/decode; results are copied to the clipboard.
 
 ## ⚙️ Configuration
 
