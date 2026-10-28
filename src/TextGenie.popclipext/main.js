@@ -17,11 +17,18 @@ const RE_CHINESE = /[\u4e00-\u9fa5]/;
 const RE_RUSSIAN = /[\u0400-\u04ff]/;
 
 function detectLanguage(t) {
-    if (RE_JAPANESE.test(t)) return 'ja';
-    if (RE_KOREAN.test(t)) return 'ko';
-    if (RE_CHINESE.test(t)) return 'zh';
-    if (RE_RUSSIAN.test(t)) return 'ru';
-    return 'en';
+    const text = String(t || '');
+    const counts = {
+        ja: (text.match(/[\\u3040-\\u309f\\u30a0-\\u30ff]/g) || []).length,
+        ko: (text.match(/[\\uac00-\\ud7af]/g) || []).length,
+        zh: (text.match(/[\\u4e00-\\u9fa5]/g) || []).length,
+        ru: (text.match(/[\\u0400-\\u04ff]/g) || []).length
+    };
+    const latin = (text.match(/[A-Za-z]/g) || []).length;
+    const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    if (ranked[0][1] > 0) return ranked[0][0];
+    // Avoid assuming every number, emoji, URL, or code snippet is English.
+    return latin > 0 ? 'en' : 'unknown';
 }
 
 // ============ Language Utilities ============
@@ -40,7 +47,9 @@ const DEEPL_LANG_MAP = {
 
 function getTargetLang(detectedLang, userTarget) {
     if (userTarget !== 'auto') return userTarget;
-    return (detectedLang === 'zh') ? 'en' : 'zh-CN';
+    // For ambiguous text, default to Simplified Chinese instead of guessing source language.
+    if (detectedLang === 'unknown') return 'zh-CN';
+    return detectedLang === 'zh' ? 'en' : 'zh-CN';
 }
 
 function getPrompt(targetLang) {
@@ -151,7 +160,7 @@ async function translateGoogle(text, targetLang) {
 
     const contentType = String(response.headers?.['content-type'] || '').toLowerCase();
     const rawBody = String(response.data || '').trim();
-    const looksLikeHtml = /(?:^<!doctype\\s+html|^<html[\\s>]|<title>\\s*(?:sorry|google))/i.test(rawBody);
+    const looksLikeHtml = /(?:^<!doctype\s+html|^<html[\s>]|<title>\s*(?:sorry|google))/i.test(rawBody);
     if (looksLikeHtml || contentType.includes('text/html')) {
         throw new Error('Google 翻译暂时不可用：请求被 Google 反爬拦截，请稍后重试或切换 DeepL/API');
     }
@@ -294,8 +303,18 @@ function translateEudic(text) {
 }
 
 function getErrorMessage(e) {
-    if (e.code === 'ECONNABORTED') return 'Request timed out';
-    return summarizeResponseBody(e.response?.data) || e.message || 'Error';
+    if (e.code === 'ECONNABORTED' || e.code === 'ETIMEDOUT') return '请求超时。请检查网络后重试。';
+    if (e.code === 'ENOTFOUND' || e.code === 'EAI_AGAIN') return '无法连接翻译服务，请检查 DNS 或网络连接。';
+    if (e.code === 'ECONNRESET' || e.code === 'ERR_NETWORK') return '网络连接中断，请稍后重试。';
+    const status = e.response?.status;
+    if (status === 401 || status === 403) return '认证失败或权限不足：请检查 API Key、账户权限和接口地址。';
+    if (status === 404) return '接口或模型不存在：请检查 API 地址与模型名称。';
+    if (status === 408 || status === 504) return '服务端处理超时，请稍后重试。';
+    if (status === 413) return '文本过长，建议分段翻译。';
+    if (status === 429) return '请求过于频繁或额度不足，请检查服务商限额后重试。';
+    if (status >= 500) return '翻译服务暂时不可用（HTTP ' + status + '），请稍后重试或切换服务。';
+    const detail = summarizeResponseBody(e.response?.data);
+    return detail || e.message || '未知错误';
 }
 
 // ============ Main Logic ============
