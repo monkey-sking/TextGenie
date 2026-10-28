@@ -26,7 +26,7 @@ Configure translation service, target language, API key, target currency, prefer
 
 ## 🔄 Updates
 
-Check [GitHub Releases](https://github.com/monkey-sking/TextGenie/releases) for the latest version and release notes. The release workflow builds the archive when a `v*` tag is pushed. You can also run the workflow manually and provide a version to create a release.
+Use the **Check for Updates** action in PopClip to check the latest stable GitHub release. If a newer version is found, it opens the release page; download the `.popclipextz` asset and double-click it to install. You can also visit [GitHub Releases](https://github.com/monkey-sking/TextGenie/releases) directly. The release workflow builds the archive when a `v*` tag is pushed. You can also run the workflow manually and provide a version to create a release.
 
 PopClip extensions run when invoked, so this extension cannot reliably perform silent background update checks while idle. A user-triggered “Check for Updates” action can be added separately.
 
