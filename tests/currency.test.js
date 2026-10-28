@@ -110,7 +110,7 @@ async function runCurrency(input, targetCurrency = 'USD') {
   const newerUpdate = await runUpdateChecker('v999.0.0');
   assert.match(newerUpdate.output, /有新版本 999\.0\.0/);
   assert.equal(newerUpdate.opened, 'https://github.com/monkey-sking/TextGenie/releases/tag/v999.0.0');
-  const currentUpdate = await runUpdateChecker('v' + currentVersion);
+  const currentUpdate = await runUpdateChecker('v' + currentVersion.split('-')[0]);
   assert.match(currentUpdate.output, /已是最新版本/);
   assert.equal(currentUpdate.opened, '');
   const noRelease = await runUpdateChecker(null, Object.assign(new Error('Not Found'), { response: { status: 404 } }));
