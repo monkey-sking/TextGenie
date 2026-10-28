@@ -146,23 +146,17 @@ async function convert() {
         const sources = Array.from(new Set(parsed.amounts.map(x => x.currency)));
         await Promise.all(sources.map(async source => { rates[source] = await getRate(source, target); }));
 
-        const lines = parsed.amounts.map(item => {
-            const converted = item.amount * rates[item.currency];
-            const original = item.amount.toLocaleString('en-US', { maximumFractionDigits: 2 });
-            const convertedText = converted.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            const originalName = CN_NAMES[item.currency] || item.currency;
-            const targetName = CN_NAMES[target] || target;
-            if (targetLanguage === 'en') return original + ' ' + item.currency + ' ≈ ' + convertedText + ' ' + target;
-            return original + ' ' + originalName + ' ≈ ' + convertedText + ' ' + targetName;
-        });
         const total = parsed.amounts.reduce((sum, item) => sum + item.amount * rates[item.currency], 0);
-        const totalText = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        const targetName = CN_NAMES[target] || target;
-        const header = sources.length > 1 ? '跨币种合计（目标币种：' + targetName + '）' : '合计（' + targetName + '）';
-        const localeInfo = configuredTarget === 'AUTO'
-            ? '目标币种根据设备地区 ' + parsed.locale.region + ' 自动选择；可在 PopClip 设置中手动指定。'
-            : '目标币种由 PopClip 设置指定。';
-        return lines.join('\n') + '\n\n' + header + '：' + totalText + ' ' + targetName + '\n' + localeInfo;
+        const formatAmount = value => value.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        const expression = parsed.amounts.map(item =>
+            formatAmount(item.amount) + ' ' + item.currency
+        ).join(' + ');
+        const totalText = formatAmount(total);
+        const relation = sources.length > 1 || sources[0] !== target ? ' ≈ ' : ' = ';
+        return expression + relation + totalText + ' ' + target;
     } catch (e) {
         const status = e.response && e.response.status;
         let message = e.message || '未知错误';
