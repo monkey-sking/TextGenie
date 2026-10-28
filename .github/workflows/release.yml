@@ -43,6 +43,12 @@ jobs:
           print(f"Validated {len(config.get('actions', []))} actions")
           PY
 
+      - name: Check JavaScript syntax
+        run: |
+          for file in src/TextGenie.popclipext/*.js; do
+            node --check "$file"
+          done
+
       - name: Build extension archive
         run: |
           cd src
