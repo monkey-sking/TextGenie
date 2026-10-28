@@ -41,28 +41,29 @@ const CODES_PATTERN = 'USD|EUR|GBP|JPY|CNY|HKD|AUD|CAD|CHF|SGD|NZD|INR|KRW|THB|M
 
 function parseCurrency(input) {
     const cleaned = input.replace(/,/g, '').trim();
-    let currency = null;
+    const detectedCurrencies = new Set();
 
-    for (const entry of Object.entries(CN_CURRENCY_NAMES)) {
-        if (cleaned.includes(entry[0])) { currency = entry[1]; break; }
+    for (const [name, code] of Object.entries(CN_CURRENCY_NAMES)) {
+        if (cleaned.includes(name)) detectedCurrencies.add(code);
     }
-    if (!currency) {
-        for (const qualified of QUALIFIED_SYMBOLS) {
-            if (qualified.pattern.test(cleaned)) { currency = qualified.currency; break; }
-        }
-    }
-    if (!currency) {
-        const codeMatch = cleaned.match(new RegExp('\\b(' + CODES_PATTERN + ')\\b', 'i'));
-        if (codeMatch) currency = codeMatch[1].toUpperCase();
-    }
-    if (!currency) {
-        for (const [symbol, code] of Object.entries(CURRENCY_SYMBOLS)) {
-            if (cleaned.includes(symbol)) { currency = code; break; }
-        }
+    for (const qualified of QUALIFIED_SYMBOLS) {
+        if (qualified.pattern.test(cleaned)) detectedCurrencies.add(qualified.currency);
     }
 
-    // Support same-currency arithmetic such as "$58.83+56.26".
-    // Only accept a simple sum of numeric terms; never evaluate arbitrary text.
+    const codeMatches = cleaned.match(new RegExp('\\b(' + CODES_PATTERN + ')\\b', 'ig')) || [];
+    for (const code of codeMatches) detectedCurrencies.add(code.toUpperCase());
+
+    const hasQualifiedYen = /(?:JP|JPN|CN|CNY|HK|HKD)\s*[¥￥]/i.test(cleaned);
+    for (const [symbol, code] of Object.entries(CURRENCY_SYMBOLS)) {
+        if ((symbol === '¥' || symbol === '￥') && hasQualifiedYen) continue;
+        if (cleaned.includes(symbol)) detectedCurrencies.add(code);
+    }
+
+    if (detectedCurrencies.size > 1) {
+        throw new Error('Mixed currencies cannot be added directly. Convert each amount to the same currency first.');
+    }
+    const currency = detectedCurrencies.size === 1 ? Array.from(detectedCurrencies)[0] : null;
+
     const expression = cleaned
         .replace(/(?:US|JP|JPN|CN|CNY|HK|HKD|NT|AUD|A|CAD|C|SGD|S)\s*(?=[$¥￥])/ig, '')
         .replace(/[$¥￥€£₹₩₽฿]/g, '')
