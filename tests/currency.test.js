@@ -124,6 +124,17 @@ async function runCurrency(input, targetCurrency = 'USD') {
   assert.equal(matches('base64-decode.js', 'SGVsbG8gV29ybGQh'), true, 'valid unpadded Base64 should be recognized');
   assert.equal(matches('base64-decode.js', 'VGhpcyBpcyBhIGxvbmdlciBiYXNlNjQgc3RyaW5nLg=='), true, 'Base64 Decode should show for long encoded strings');
 
+  assert.equal(matches('check-updates.js', 'hello world'), false, 'update checker must stay hidden for normal text');
+  assert.equal(matches('check-updates.js', '检查文灵更新'), true, 'update checker must appear for its trigger phrase');
+  assert.equal(matches('url.js', 'ordinary sentence'), false, 'Open URL must stay hidden for ordinary text');
+  assert.equal(matches('url.js', 'https://example.com'), true, 'Open URL must show for URLs');
+  assert.equal(matches('currency.js', 'ordinary sentence'), false, 'Currency must stay hidden for ordinary text');
+  assert.equal(matches('currency.js', '$12.50'), true, 'Currency must show for currency-like text');
+  assert.equal(matches('terminal.applescript', 'ordinary sentence'), false, 'Terminal must stay hidden for ordinary text');
+  assert.equal(matches('terminal.applescript', 'git status'), true, 'Terminal must show for command-like text');
+  assert.equal(matches('path.applescript', 'ordinary sentence'), false, 'Path opener must stay hidden for ordinary text');
+  assert.equal(matches('path.applescript', '/Users/test/file.txt'), true, 'Path opener must show for absolute paths');
+
   for (const action of config.actions) {
     if (action['regular expression']) popclipRegex(action['regular expression']);
     if (action.icon) assert.ok(fs.existsSync(path.join(root, action.icon)), 'missing icon: ' + action.icon);
