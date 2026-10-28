@@ -66,6 +66,14 @@ jobs:
           zip -qr ../TextGenie.popclipextz TextGenie.popclipext/
           unzip -t ../TextGenie.popclipextz
 
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TextGenie-popclipextz
+          path: TextGenie.popclipextz
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Publish tagged release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
