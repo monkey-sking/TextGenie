@@ -392,7 +392,7 @@
         "en": "URL Encode",
         "zh-Hans": "URL 编码"
       },
-      "icon": "icon.svg",
+      "icon": "url-encode.svg",
       "javascript file": "url-encode.js",
       "after": "preview-result",
       "requirements": [
@@ -405,7 +405,7 @@
         "en": "URL Decode",
         "zh-Hans": "URL 解码"
       },
-      "icon": "icon.svg",
+      "icon": "url-decode.svg",
       "javascript file": "url-decode.js",
       "after": "preview-result",
       "requirements": [
@@ -418,7 +418,7 @@
         "en": "Base64 Encode",
         "zh-Hans": "Base64 编码"
       },
-      "icon": "icon.svg",
+      "icon": "base64-encode.svg",
       "javascript file": "base64-encode.js",
       "after": "preview-result",
       "requirements": [
@@ -431,7 +431,7 @@
         "en": "Base64 Decode",
         "zh-Hans": "Base64 解码"
       },
-      "icon": "icon.svg",
+      "icon": "base64-decode.svg",
       "javascript file": "base64-decode.js",
       "after": "preview-result",
       "requirements": [
