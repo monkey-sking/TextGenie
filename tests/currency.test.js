@@ -88,6 +88,18 @@ async function runCurrency(input, targetCurrency = 'USD') {
   assert.equal(chatTranslation.call.payload.messages[1].content, 'source text');
   assert.ok(!('input' in chatTranslation.call.payload), 'Chat Completions API must receive messages payload');
 
+  async function runUrlAction(input) {
+    let opened = '';
+    const popclip = { input: { text: input }, openUrl: value => { opened = value; } };
+    const source = fs.readFileSync(path.join(root, 'url.js'), 'utf8');
+    const action = new AsyncFunction('popclip', source);
+    const output = await action(popclip);
+    return { opened, output };
+  }
+  assert.equal((await runUrlAction('HTTPS://example.com')).opened, 'HTTPS://example.com', 'uppercase URL schemes must not be prefixed twice');
+  assert.equal((await runUrlAction('example.com')).opened, 'https://example.com', 'bare domains should receive https');
+  assert.match((await runUrlAction('   ')).output, /请选择网址/);
+
   const popclipRegex = (pattern) => {
     let flags = '';
     while (pattern.startsWith('(?')) {
