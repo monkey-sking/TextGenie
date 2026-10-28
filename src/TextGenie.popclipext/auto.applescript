@@ -2,7 +2,7 @@
 -- Hybrid optimized logic combining native iTerm2 and fast-paste Terminal
 
 set rawText to "{popclip text}"
-set cleanedCmd to do shell script ("/bin/echo " & quoted form of rawText & " | /usr/bin/sed -E 's/^[[:space:]$#>%]+//'")
+set cleanedCmd to do shell script ("/usr/bin/printf '%s' " & quoted form of rawText & " | /usr/bin/sed -E 's/^[[:space:]$#>%]+//'")
 set useNewTab to "{popclip option useNewTab}" is "1"
 
 try
