@@ -35,7 +35,7 @@ const QUALIFIED_SYMBOLS = [
 const CN_NAMES = {
     CNY: '人民币', USD: '美元', EUR: '欧元', GBP: '英镑', JPY: '日元',
     HKD: '港币', KRW: '韩元', TWD: '台币', SGD: '新加坡元',
-    AUD: '澳元', CAD: '加元', CHF: '瑞郎', THB: '泰铢', INR: '卢比', RUB: '卢布'
+    AUD: '澳元', CAD: '加元', CHF: '瑞郎', NZD: '纽元', MYR: '马来西亚林吉特', THB: '泰铢', INR: '卢比', RUB: '卢布'
 };
 const CODES_PATTERN = 'USD|EUR|GBP|JPY|CNY|HKD|AUD|CAD|CHF|SGD|NZD|INR|KRW|THB|MYR|RUB|TWD';
 
