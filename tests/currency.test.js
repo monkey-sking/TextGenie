@@ -88,6 +88,38 @@ async function runCurrency(input, targetCurrency = 'USD') {
   assert.equal(chatTranslation.call.payload.messages[1].content, 'source text');
   assert.ok(!('input' in chatTranslation.call.payload), 'Chat Completions API must receive messages payload');
 
+  async function runUpdateChecker(tagName, failure = null) {
+    let opened = '';
+    const popclip = { openUrl: value => { opened = value; } };
+    const source = fs.readFileSync(path.join(root, 'check-updates.js'), 'utf8');
+    const axios = {
+      get: async () => {
+        if (failure) throw failure;
+        return { data: { tag_name: tagName, html_url: 'https://github.com/monkey-sking/TextGenie/releases/tag/' + tagName } };
+      }
+    };
+    const action = new AsyncFunction('require', 'popclip', source);
+    const output = await action(name => {
+      if (name !== 'axios') throw new Error('Unexpected dependency: ' + name);
+      return axios;
+    }, popclip);
+    return { output, opened };
+  }
+  const checkerSource = fs.readFileSync(path.join(root, 'check-updates.js'), 'utf8');
+  const currentVersion = checkerSource.match(/CURRENT_VERSION = '([^']+)'/)[1];
+  const newerUpdate = await runUpdateChecker('v999.0.0');
+  assert.match(newerUpdate.output, /有新版本 999\\.0\\.0/);
+  assert.equal(newerUpdate.opened, 'https://github.com/monkey-sking/TextGenie/releases/tag/v999.0.0');
+  const currentUpdate = await runUpdateChecker('v' + currentVersion);
+  assert.match(currentUpdate.output, /已是最新版本/);
+  assert.equal(currentUpdate.opened, '');
+  const noRelease = await runUpdateChecker(null, Object.assign(new Error('Not Found'), { response: { status: 404 } }));
+  assert.match(noRelease.output, /尚无正式发布版本/);
+  assert.equal(noRelease.opened, 'https://github.com/monkey-sking/TextGenie/releases');
+  const offline = await runUpdateChecker(null, Object.assign(new Error('network down'), { code: 'ENETUNREACH' }));
+  assert.match(offline.output, /检查更新失败/);
+  assert.doesNotMatch(offline.output, /已是最新版本/);
+
   async function runUrlAction(input) {
     let opened = '';
     const popclip = { input: { text: input }, openUrl: value => { opened = value; } };
