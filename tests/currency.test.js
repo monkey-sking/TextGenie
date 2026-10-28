@@ -108,7 +108,7 @@ async function runCurrency(input, targetCurrency = 'USD') {
   const checkerSource = fs.readFileSync(path.join(root, 'check-updates.js'), 'utf8');
   const currentVersion = checkerSource.match(/CURRENT_VERSION = '([^']+)'/)[1];
   const newerUpdate = await runUpdateChecker('v999.0.0');
-  assert.match(newerUpdate.output, /有新版本 999\\.0\\.0/);
+  assert.match(newerUpdate.output, /有新版本 999\.0\.0/);
   assert.equal(newerUpdate.opened, 'https://github.com/monkey-sking/TextGenie/releases/tag/v999.0.0');
   const currentUpdate = await runUpdateChecker('v' + currentVersion);
   assert.match(currentUpdate.output, /已是最新版本/);
