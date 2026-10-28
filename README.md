@@ -31,6 +31,27 @@ Select the dedicated trigger phrase `textgenie update` or `检查文灵更新` t
 
 PopClip extensions run when invoked, so this extension does not perform silent background update checks while idle. The update checker is restricted to dedicated trigger phrases so it does not clutter the toolbar for ordinary selected text.
 
+## 🧪 Quick smoke tests
+
+Select each sample below in any text field to check whether the relevant PopClip action appears and works. Ordinary prose should not trigger unrelated tools.
+
+| Feature | Select this text | Expected check |
+|---|---|---|
+| Same-currency sum | `$58.83 + 56.26` | Treat the second amount as USD and sum to 115.09 USD. |
+| Mixed currencies | `$58.83 + €56.26 + JP¥3,000` | Recognize USD, EUR, and JPY separately and convert to the configured target currency. |
+| Ordinary prose | `今天需要检查项目的构建结果和更新逻辑。` | Currency, URL, and Base64 actions should not appear without a matching pattern. |
+| Translation | `The best way to predict the future is to create it.` | Translation action appears and returns a translation. |
+| URL | `https://github.com/monkey-sking/TextGenie` | Open URL action appears and opens the selected address. |
+| Format JSON | `{"name":"TextGenie","features":["currency","translation"],"enabled":true}` | Format JSON produces readable, valid JSON. |
+| URL encode/decode | `https://example.com/search?q=hello%20world&lang=zh` | URL actions appear for URL-like text; encoding and decoding can be round-tripped. |
+| Base64 round-trip | `Hello, TextGenie! 12345` | Encode then decode; the decoded text must match the original. |
+| Terminal | `git status` | Terminal action fills the command; it must not execute it automatically. |
+| Check updates | `textgenie update` or `检查文灵更新` | Update checker appears only for a dedicated trigger phrase. |
+
+For the full manual test matrix—including network failures, invalid JSON, custom translation APIs, path handling, and update-check failure cases—see [QA test cases and release checklist](./QA_TEST_CASES.md).
+
+Automated tests use mocked exchange rates and API responses. Real exchange-rate accuracy, third-party translation availability, PopClip toolbar behavior, and the installed-extension update flow still require manual verification on macOS.
+
 ## 🧪 Test cases
 
 See [QA test cases and release checklist](./QA_TEST_CASES.md) for automated and manual verification scenarios.
