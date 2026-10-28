@@ -17,7 +17,7 @@ Open the Releases page and download the `TextGenie.popclipextz` asset from the l
 - **Currency conversion** — recognizes qualified symbols such as `JP¥3,000` and same-currency sums such as `$58.83+56.26`.
 - **Translation** — Google, DeepL, OpenAI, Gemini, custom API, Bob, and Eudic integrations.
 - **Open URL** — recognizes URLs, IP addresses, and localhost.
-- **Terminal helper** — fills commands into Terminal or iTerm2 without auto-running.
+- **Terminal helper** — fills commands into Terminal or iTerm2 without auto-running; recognizes Git, Node.js, Python, Docker, Kubernetes, Swift/Xcode, Homebrew, Codex, Claude Code, OpenCode, Gemini CLI, and common network/system diagnostics. Supports the current window or a new tab.
 - **Path recognition** — recognizes absolute, home, and relative paths.
 
 ## ⚙️ Configuration
