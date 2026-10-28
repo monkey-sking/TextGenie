@@ -359,7 +359,8 @@
         "zh-Hans": "检查更新"
       },
       "icon": "update.svg",
-      "javascript file": "check-updates.js"
+      "javascript file": "check-updates.js",
+      "regular expression": "(?i)^(textgenie update|textgenie updates|检查文灵更新)$"
     },
     {
       "title": {
