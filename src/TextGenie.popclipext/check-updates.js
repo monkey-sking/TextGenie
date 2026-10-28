@@ -1,8 +1,7 @@
-// TextGenie update checker
+// TextGenie update checker. The release workflow replaces the version placeholder at build time.
 const axios = require('axios');
 
-// Keep this in sync with the version used for the published release.
-const CURRENT_VERSION = '1.0.0';
+const CURRENT_VERSION = '__TEXTGENIE_VERSION__';
 const RELEASE_API = 'https://api.github.com/repos/monkey-sking/TextGenie/releases/latest';
 const RELEASES_PAGE = 'https://github.com/monkey-sking/TextGenie/releases';
 const TIMEOUT_MS = 8000;
@@ -33,20 +32,22 @@ try {
     });
     const release = response.data || {};
     const latestVersion = String(release.tag_name || '').replace(/^v/i, '');
-    if (!latestVersion) throw new Error('GitHub release did not include a version tag.');
+    if (!latestVersion || !/^\d+\.\d+\.\d+$/.test(latestVersion)) {
+        throw new Error('GitHub release did not include a valid stable version tag.');
+    }
 
     if (compareVersions(latestVersion, CURRENT_VERSION) > 0) {
         popclip.openUrl(release.html_url || RELEASES_PAGE);
-        return '✨ TextGenie ' + latestVersion + ' is available. Opened the release page; download the .popclipextz asset and double-click to update. Current version: ' + CURRENT_VERSION + '.';
+        return '✨ 文灵有新版本 ' + latestVersion + '，当前版本 ' + CURRENT_VERSION + '。已打开下载页面。';
     }
 
-    return '✅ TextGenie is up to date (' + CURRENT_VERSION + ').';
+    return '✅ 文灵已是最新版本（' + CURRENT_VERSION + '）。';
 } catch (e) {
     const status = e.response?.status;
     if (status === 404) {
         popclip.openUrl(RELEASES_PAGE);
-        return 'No published release found yet. Opened the Releases page; the first release must be published before update checks can work.';
+        return '尚无正式发布版本，已打开 Releases 页面。首次发布后即可检查更新。';
     }
-    const message = e.code === 'ECONNABORTED' ? 'Request timed out' : (e.message || 'Unknown error');
-    return '❌ Could not check for updates: ' + message + '. You can check manually at ' + RELEASES_PAGE;
+    const message = e.code === 'ECONNABORTED' ? '请求超时' : (e.message || '未知错误');
+    return '❌ 检查更新失败：' + message + '。可手动查看 ' + RELEASES_PAGE;
 }
