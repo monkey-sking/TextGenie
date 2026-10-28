@@ -52,7 +52,39 @@ async function runCurrency(input, targetCurrency = 'USD') {
   }
   const decode = configActions.find(item => item['javascript file'] === 'url-decode.js')['regular expression'];
   assert.match('%20'.match(new RegExp(decode.replace(/^\(\?i\)/, ''), 'i'))?.[0] || '', /%20/);
-  console.log('Currency tests passed: mixed-currency sum, inherited currency, repeated currency, content-sensitive action configuration.');
+  const popclipRegex = (pattern) => {
+    let flags = '';
+    while (pattern.startsWith('(?')) {
+      const match = pattern.match(/^\\(\\?([ims]+)\\)/);
+      if (!match) break;
+      flags += match[1];
+      pattern = pattern.slice(match[0].length);
+    }
+    return new RegExp(pattern, [...new Set(flags)].join(''));
+  };
+  const matches = (file, sample) => {
+    const action = config.actions.find(item => item['javascript file'] === file);
+    return popclipRegex(action['regular expression']).test(sample);
+  };
+  assert.equal(matches('url-encode.js', '普通中文文本'), false, 'URL Encode should not show for ordinary CJK text');
+  assert.equal(matches('url-encode.js', 'https://example.com/a?x=1'), true, 'URL Encode should show for URL-like text');
+  assert.equal(matches('base64-encode.js', '普通中文文本'), false, 'Base64 Encode should not show for ordinary single-line text');
+  assert.equal(matches('base64-encode.js', '第一行\\n第二行'), true, 'Base64 Encode should show for multiline text');
+  assert.equal(matches('base64-encode.js', '{\\n  "a": 1\\n}'), false, 'Base64 Encode should stay hidden for JSON');
+  assert.equal(matches('base64-decode.js', 'SGVsbG8gV29ybGQh'), false, 'short unpadded base64 should not overmatch ordinary text');
+  assert.equal(matches('base64-decode.js', 'VGhpcyBpcyBhIGxvbmdlciBiYXNlNjQgc3RyaW5nLg=='), true, 'Base64 Decode should show for long encoded strings');
+
+  for (const action of config.actions) {
+    if (action['regular expression']) popclipRegex(action['regular expression']);
+    if (action.icon) assert.ok(fs.existsSync(path.join(root, action.icon)), 'missing icon: ' + action.icon);
+  }
+  assert.notEqual(
+    config.actions.find(item => item['javascript file'] === 'format-json.js').icon,
+    config.actions.find(item => item['javascript file'] === 'minify-json.js').icon,
+    'JSON format and minify should use distinct icons'
+  );
+
+  console.log('Regression tests passed: currency conversion, action matching, icon resources, and JSON action separation.');
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;
