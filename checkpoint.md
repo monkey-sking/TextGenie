@@ -1,41 +1,19 @@
-# TextGenie Extension - Checkpoint
+# TextGenie — Development Checkpoint
 
-## Current Status
+## Current implementation
+- Translation: Google (unofficial endpoint), Google Cloud, DeepL, OpenAI, Gemini, OpenAI-compatible Custom API, Bob, Eudic.
+- Currency: same-currency sums and mixed-currency conversion; target defaults from system locale with manual override.
+- Utility actions: open URL, terminal command fill, path opening, JSON format/minify, URL encode/decode, Base64 encode/decode.
+- Icons: monochrome extension icon; distinct icons for URL/Base64 and JSON format/minify actions.
+- Update checker: only appears for dedicated trigger phrases (`textgenie update`, `textgenie updates`, `检查文灵更新`).
+- CI: manifest/resource checks, JavaScript syntax parsing, regression tests, extension ZIP validation, artifact upload.
 
-### ✅ Completed
+## Verification boundaries
+- CI tests use mocked exchange rates; they do not verify live FX rates.
+- CI cannot verify PopClip toolbar visibility or AppleScript behavior on the user's Mac.
+- Terminal filling and path opening require macOS permission and app-specific runtime checks.
+- A permanent latest-release download link only works after the first GitHub Release is published.
 
-- **3 Distinct Actions**: URL (🔗), Currency (💴), Translate (🅰️文)
-- **Custom Icons**: User-provided PNG icons applied
-- **Main Icon**: Banana (🍌) icon.svg
-- **Translation Services**: Google, DeepL, OpenAI, Gemini, Custom API, Bob, Eudic
-- **Currency Conversion**: 15 currencies with localized output
-- **Documentation**: README.md updated
-
-### ⚠️ Pending Verification
-
-- **Extension installation**: User needs to double-click `extensions/TextGenie.popclipextz`
-- **PopClip actions**: Verify 3 icons appear when selecting text
-
-### ❌ Not Possible (PopClip Limitation)
-
-- **Dynamic button styling**: `dynamic` + `network` entitlements mutually exclusive
-- **Workaround**: Use PopClip's built-in "Show as Icon" toggle
-
----
-
-## Next Steps
-
-1. Install `extensions/TextGenie.popclipextz`
-2. Verify actions appear in PopClip bar
-3. Test URL, Currency, Translation functionality
-4. Use PopClip Settings → ⚙️ → "Show as Icon" to toggle display
-
----
-
-## Files
-
-```
-src/SmartAssistant.popclipext/
-├── Config.json, icon.svg, main.js, url.js, currency.js
-└── url.png, currency.png, translate.png
-```
+## Release process
+- Push a `v*` tag to build and publish a release.
+- Or manually run the release workflow and provide a version.
