@@ -397,7 +397,8 @@
       "after": "preview-result",
       "requirements": [
         "text"
-      ]
+      ],
+      "regular expression": "(?s).*(https?://|www\\\\.|[\\\\s\\\\u0080-\\\\uffff]|[&=+#%?]).*"
     },
     {
       "title": {
@@ -409,7 +410,8 @@
       "after": "preview-result",
       "requirements": [
         "text"
-      ]
+      ],
+      "regular expression": "(?i).*%[0-9a-f]{2}.*"
     },
     {
       "title": {
@@ -421,7 +423,8 @@
       "after": "preview-result",
       "requirements": [
         "text"
-      ]
+      ],
+      "regular expression": "(?s).*(?:[\\\\u0080-\\\\uffff]|[\\\\r\\\\n\\\\t]).*"
     },
     {
       "title": {
@@ -433,7 +436,8 @@
       "after": "preview-result",
       "requirements": [
         "text"
-      ]
+      ],
+      "regular expression": "(?s)^[A-Za-z0-9+/]{8,}={0,2}\\\\s*$"
     }
   ]
 }
