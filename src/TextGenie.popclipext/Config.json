@@ -284,7 +284,7 @@
       "icon": "currency.png",
       "javascript file": "currency.js",
       "after": "preview-result",
-      "regular expression": "(?i).*(\\$|[¥￥€£₹₩₽฿]|USD|CNY|EUR|GBP|JPY|HKD|KRW|TWD|SGD|AUD|CAD|CHF|NZD|MYR|THB|INR|RUB|元|币|镑|法郎|铢|卢|円|林吉特).*"
+      "regular expression": "(?i).*(?:[$¥￥€£₹₩₽฿]\\s*\\d|\\d[\\d,.]*\\s*[$¥￥€£₹₩₽฿]|\\b(?:USD|CNY|EUR|GBP|JPY|HKD|KRW|TWD|SGD|AUD|CAD|CHF|NZD|MYR|THB|INR|RUB)\\b\\s*\\d|\\d[\\d,.]*\\s*\\b(?:USD|CNY|EUR|GBP|JPY|HKD|KRW|TWD|SGD|AUD|CAD|CHF|NZD|MYR|THB|INR|RUB)\\b|\\d[\\d,.]*\\s*(?:人民币|美金|美元|欧元|英镑|日元|日币|日圆|日圓|港币|港元|韩元|台币|新台币|新加坡元|新币|澳元|澳币|加元|加币|瑞士法郎|瑞郎|纽元|新西兰元|泰铢|卢比|卢布|马币|马来西亚林吉特)).*"
     },
     {
       "title": {
