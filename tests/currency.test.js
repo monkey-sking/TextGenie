@@ -161,6 +161,12 @@ async function runCurrency(input, targetCurrency = 'USD') {
   assert.equal(matches('url.js', 'ordinary sentence'), false, 'Open URL must stay hidden for ordinary text');
   assert.equal(matches('url.js', 'https://example.com'), true, 'Open URL must show for URLs');
   assert.equal(matches('currency.js', 'ordinary sentence'), false, 'Currency must stay hidden for ordinary text');
+  assert.equal(matches('currency.js', 'Hi there,\\n\\nCongrats on launching Aion! I came across your website and was curious to learn more about what you are building and how it helps users. I help products reach the right audience through Reddit marketing by finding relevant AI, technology, and startup communities where people are already discussing their challenges.'), false, 'marketing emails must not trigger currency conversion');
+  assert.equal(matches('currency.js', 'communities where people are already discussing their challenges'), false, 'the word communities must not match the AUD currency code');
+  assert.equal(matches('currency.js', '$58.83 + 56.26'), true, 'currency symbol followed by amount should trigger');
+  assert.equal(matches('currency.js', '$58.83 + €56.26 + JP¥3,000'), true, 'mixed currencies should trigger');
+  assert.equal(matches('currency.js', '100 USD + 50 EUR'), true, 'currency codes next to amounts should trigger');
+  assert.equal(matches('currency.js', '100美元 + 50欧元'), true, 'Chinese currency names next to amounts should trigger');
   assert.equal(matches('currency.js', '$12.50'), true, 'Currency must show for currency-like text');
   assert.equal(matches('terminal.applescript', 'ordinary sentence'), false, 'Terminal must stay hidden for ordinary text');
   assert.equal(matches('terminal.applescript', 'git status'), true, 'Terminal must show for command-like text');
