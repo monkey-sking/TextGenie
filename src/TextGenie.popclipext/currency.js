@@ -96,7 +96,9 @@ function detectTokenCurrency(token, localeCurrency) {
 
 function parseAmounts(input) {
     const locale = getLocaleDefaults();
-    const cleaned = input.replace(/,/g, '').trim();
+    // Remove invisible direction/format controls added by rich-text sources (e.g. ⁦JP¥⁩2,640).
+    const normalizedInput = input.replace(/[\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069\u2060\uFEFF\u00AD\u200B]/g, '');
+    const cleaned = normalizedInput.replace(/,/g, '').trim();
     // The supported expression is a sum separated by +. Currency can be repeated or
     // inherited from the preceding amount, e.g. $58.83+56.26.
     const pieces = cleaned.split('+').map(s => s.trim()).filter(Boolean);
