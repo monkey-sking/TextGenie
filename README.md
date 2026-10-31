@@ -1,5 +1,9 @@
 # TextGenie for PopClip
 
+<!-- badges:start -->
+[![Stars](https://img.shields.io/github/stars/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/stargazers) [![Forks](https://img.shields.io/github/forks/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/network/members)
+<!-- badges:end -->
+
 [![CI](https://github.com/monkey-sking/TextGenie/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/monkey-sking/TextGenie/actions/workflows/release.yml) [![Latest Release](https://img.shields.io/github/v/release/monkey-sking/TextGenie?display_name=tag&style=flat-square)](https://github.com/monkey-sking/TextGenie/releases/latest) [![Downloads](https://img.shields.io/github/downloads/monkey-sking/TextGenie/total?style=flat-square)](https://github.com/monkey-sking/TextGenie/releases) [![License](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)](LICENSE) [![Last commit](https://img.shields.io/github/last-commit/monkey-sking/TextGenie?style=flat-square)](https://github.com/monkey-sking/TextGenie/commits/main)
 
 [🇨🇳 中文版](./README_zh.md)
