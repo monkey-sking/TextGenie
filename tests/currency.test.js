@@ -33,6 +33,9 @@ async function runCurrency(input, targetCurrency = 'USD') {
 }
 
 (async () => {
+  const isolatedJPY = await runCurrency('\u2066JP¥\u2069 2,640');
+  assert.match(isolatedJPY.output, /2,640\.00 JPY ≈ 26\.40 USD/, 'bidi-isolated JP¥ amount should parse as JPY');
+
   const mixed = await runCurrency('$100+€50+JP¥3,000');
   assert.match(mixed.output, /100\.00 USD \+ 50\.00 EUR \+ 3,000\.00 JPY ≈ 185\.00 USD/);
   assert.match(mixed.output, /185\.00 USD/);
@@ -168,6 +171,8 @@ async function runCurrency(input, targetCurrency = 'USD') {
   assert.equal(matches('currency.js', '100 USD + 50 EUR'), true, 'currency codes next to amounts should trigger');
   assert.equal(matches('currency.js', '100美元 + 50欧元'), true, 'Chinese currency names next to amounts should trigger');
   assert.equal(matches('currency.js', '$12.50'), true, 'Currency must show for currency-like text');
+  assert.equal(matches('currency.js', 'JP¥2,640'), true, 'standalone JP¥ amounts should trigger currency conversion');
+  assert.equal(matches('currency.js', '\u2066JP¥\u20692,640'), true, 'bidi-isolated JP¥ amounts should trigger currency conversion');
   assert.equal(matches('terminal.applescript', 'ordinary sentence'), false, 'Terminal must stay hidden for ordinary text');
   assert.equal(matches('terminal.applescript', 'git status'), true, 'Terminal must show for command-like text');
   assert.equal(matches('path.applescript', 'ordinary sentence'), false, 'Path opener must stay hidden for ordinary text');
