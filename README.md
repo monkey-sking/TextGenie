@@ -18,7 +18,7 @@ Open the [Releases page](https://github.com/monkey-sking/TextGenie/releases) and
 
 ## ✨ Features
 
-- **Currency conversion** — supports same-currency and mixed-currency sums, e.g. `$100+€50+JP¥3,000`. The target currency defaults from the device locale and can be overridden in PopClip settings. Unmarked amounts inherit the previous amount's currency; if the first amount is unmarked, the device-region currency is used.
+- **Currency conversion** — recognizes all currency codes currently listed by the exchange-rate provider, including PHP (Philippine peso), IDR, VND, AED, BRL, and more. Supports symbols, code-before/after-amount formats, mixed-currency sums, and common comma/dot/space grouping styles. The target currency defaults from the device locale and can be overridden in PopClip settings. Unmarked amounts inherit the previous amount's currency; if the first amount is unmarked, the device-region currency is used.
 - **Translation** — Google, DeepL, OpenAI, Gemini, custom API, Bob, and Eudic integrations, with categorized timeout/network/auth/model/rate-limit/server errors and prompts that preserve Markdown, code, URLs, and variable names.
 - **Open URL** — recognizes URLs, IP addresses, and localhost.
 - **Terminal helper** — fills commands into Terminal or iTerm2 without auto-running; recognizes Git, Node.js, Python, Docker, Kubernetes, Swift/Xcode, Homebrew, Codex, Claude Code, OpenCode, Gemini CLI, and common network/system diagnostics. Supports the current window or a new tab.
@@ -43,6 +43,7 @@ Select each sample below in any text field to check whether the relevant PopClip
 |---|---|---|
 | Same-currency sum | `$58.83 + 56.26` | Treat the second amount as USD and sum to 115.09 USD. |
 | Mixed currencies | `$58.83 + €56.26 + JP¥3,000` | Recognize USD, EUR, and JPY separately and convert to the configured target currency. |
+| Philippine peso | `PHP 5,794.64` or `₱5,794.64` | Recognize PHP and convert to the configured target currency. |
 | Ordinary prose | `今天需要检查项目的构建结果和更新逻辑。` | Currency, URL, and Base64 actions should not appear without a matching pattern. |
 | Translation | `The best way to predict the future is to create it.` | Translation action appears and returns a translation. |
 | URL | `https://github.com/monkey-sking/TextGenie` | Open URL action appears and opens the selected address. |

@@ -11,6 +11,10 @@ const fakeRates = {
   USD: { USD: 1, CNY: 7.2 },
   EUR: { USD: 1.1, CNY: 7.8 },
   JPY: { USD: 0.01, CNY: 0.05 },
+  PHP: { USD: 0.018, CNY: 0.13 },
+  BRL: { USD: 0.2, CNY: 1.44 },
+  IDR: { USD: 0.000065, CNY: 0.000468 },
+  PKR: { USD: 0.0036, CNY: 0.0259 },
   CNY: { USD: 0.14, CNY: 1 }
 };
 
@@ -38,6 +42,22 @@ async function runCurrency(input, targetCurrency = 'USD') {
 
   const isolatedJPYWithoutComma = await runCurrency('\u2066JP¥\u20692640');
   assert.match(isolatedJPYWithoutComma.output, /2,640\.00 JPY ≈ 26\.40 USD/, 'bidi-isolated JP¥ amount without a thousands separator should parse as JPY');
+
+  for (const sample of ['PHP 5,794.64', '5,794.64 PHP', '₱5,794.64']) {
+    const php = await runCurrency(sample);
+    assert.match(php.output, /5,794\.64 PHP ≈ 104\.30 USD/, sample + ' should be recognized as Philippine pesos');
+  }
+  const brl = await runCurrency('R$ 100');
+  assert.match(brl.output, /100\.00 BRL ≈ 20\.00 USD/, 'R$ should be recognized as Brazilian real, not USD');
+  const idrName = await runCurrency('印尼卢比 100');
+  assert.match(idrName.output, /100\.00 IDR ≈ 0\.01 USD/, 'specific Indonesian currency name should not collide with generic rupee alias');
+  const pkrName = await runCurrency('巴基斯坦卢比 100');
+  assert.match(pkrName.output, /100\.00 PKR ≈ 0\.36 USD/, 'specific Pakistani currency name should not collide with generic rupee alias');
+
+  for (const sample of ['5.794,64 EUR', '5794,64 EUR', '5 794,64 EUR']) {
+    const localized = await runCurrency(sample);
+    assert.match(localized.output, /5,794\.64 EUR ≈ 6,374\.10 USD/, sample + ' should support common decimal-comma/grouping formats');
+  }
 
   const mixed = await runCurrency('$100+€50+JP¥3,000');
   assert.match(mixed.output, /100\.00 USD \+ 50\.00 EUR \+ 3,000\.00 JPY ≈ 185\.00 USD/);
@@ -172,6 +192,15 @@ async function runCurrency(input, targetCurrency = 'USD') {
   assert.equal(matches('currency.js', '$58.83 + 56.26'), true, 'currency symbol followed by amount should trigger');
   assert.equal(matches('currency.js', '$58.83 + €56.26 + JP¥3,000'), true, 'mixed currencies should trigger');
   assert.equal(matches('currency.js', '100 USD + 50 EUR'), true, 'currency codes next to amounts should trigger');
+  assert.equal(matches('currency.js', 'PHP 5,794.64'), true, 'PHP prefix code should trigger currency conversion');
+  assert.equal(matches('currency.js', '5,794.64 PHP'), true, 'PHP suffix code should trigger currency conversion');
+  assert.equal(matches('currency.js', '₱5,794.64'), true, 'Philippine peso symbol should trigger currency conversion');
+  assert.equal(matches('currency.js', '100 IDR + 50 VND + 25 AED'), true, 'additional ISO currency codes should trigger currency conversion');
+  assert.equal(matches('currency.js', 'R$100'), true, 'Brazilian real symbol should trigger currency conversion');
+  assert.equal(matches('currency.js', '5 794,64 EUR'), true, 'space-grouped amounts should trigger currency conversion');
+  assert.ok(config.options.find(option => option.identifier === 'targetCurrency').values.includes('PHP'), 'PHP should be available as a target currency');
+  assert.equal(matches('terminal.applescript', 'PHP 5,794.64'), false, 'PHP currency amounts must not trigger the terminal action');
+  assert.equal(matches('terminal.applescript', 'php artisan serve'), true, 'PHP CLI commands must remain supported');
   assert.equal(matches('currency.js', '100美元 + 50欧元'), true, 'Chinese currency names next to amounts should trigger');
   assert.equal(matches('currency.js', '$12.50'), true, 'Currency must show for currency-like text');
   assert.equal(matches('currency.js', 'JP¥2,640'), true, 'standalone JP¥ amounts should trigger currency conversion');
