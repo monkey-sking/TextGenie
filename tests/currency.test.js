@@ -13,6 +13,7 @@ const fakeRates = {
   JPY: { USD: 0.01, CNY: 0.05 },
   PHP: { USD: 0.018, CNY: 0.13 },
   BRL: { USD: 0.2, CNY: 1.44 },
+  TRY: { USD: 0.025, CNY: 0.18 },
   IDR: { USD: 0.000065, CNY: 0.000468 },
   PKR: { USD: 0.0036, CNY: 0.0259 },
   CNY: { USD: 0.14, CNY: 1 }
@@ -47,6 +48,12 @@ async function runCurrency(input, targetCurrency = 'USD') {
     const php = await runCurrency(sample);
     assert.match(php.output, /5,794\.64 PHP ≈ 104\.30 USD/, sample + ' should be recognized as Philippine pesos');
   }
+  const compactTry = await runCurrency('TRY1989.99');
+  assert.match(compactTry.output, /1,989\.99 TRY ≈ 49\.75 USD/, 'TRY without a separator should parse as Turkish lira');
+  const compactPhp = await runCurrency('PHP5794.64');
+  assert.match(compactPhp.output, /5,794\.64 PHP ≈ 104\.30 USD/, 'PHP without a separator should parse as Philippine pesos');
+  const compactUsd = await runCurrency('USD58.83');
+  assert.match(compactUsd.output, /58\.83 USD = 58\.83 USD/, 'USD without a separator should parse as US dollars');
   const brl = await runCurrency('R$ 100');
   assert.match(brl.output, /100\.00 BRL ≈ 20\.00 USD/, 'R$ should be recognized as Brazilian real, not USD');
   const idrName = await runCurrency('印尼卢比 100');
@@ -193,6 +200,10 @@ async function runCurrency(input, targetCurrency = 'USD') {
   assert.equal(matches('currency.js', '$58.83 + €56.26 + JP¥3,000'), true, 'mixed currencies should trigger');
   assert.equal(matches('currency.js', '100 USD + 50 EUR'), true, 'currency codes next to amounts should trigger');
   assert.equal(matches('currency.js', 'PHP 5,794.64'), true, 'PHP prefix code should trigger currency conversion');
+  assert.equal(matches('currency.js', 'TRY1989.99'), true, 'compact TRY prefix code should trigger currency conversion');
+  assert.equal(matches('currency.js', 'PHP5794.64'), true, 'compact PHP prefix code should trigger currency conversion');
+  assert.equal(matches('currency.js', 'USD58.83'), true, 'compact USD prefix code should trigger currency conversion');
+  assert.equal(matches('currency.js', 'XTRY1989.99'), false, 'currency codes embedded in words must not trigger conversion');
   assert.equal(matches('currency.js', '5,794.64 PHP'), true, 'PHP suffix code should trigger currency conversion');
   assert.equal(matches('currency.js', '₱5,794.64'), true, 'Philippine peso symbol should trigger currency conversion');
   assert.equal(matches('currency.js', '100 IDR + 50 VND + 25 AED'), true, 'additional ISO currency codes should trigger currency conversion');
