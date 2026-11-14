@@ -104,7 +104,10 @@ function resolveTargetCurrency() {
 
 function detectTokenCurrency(token, localeCurrency) {
     const upper = token.toUpperCase();
-    const codes = upper.match(new RegExp('\\b(' + CODE_PATTERN + ')\\b', 'g')) || [];
+    const codePattern = new RegExp('(?:^|[^A-Z0-9_])(' + CODE_PATTERN + ')(?=\\s*\\d|\\b)', 'g');
+    const codes = [];
+    let codeMatch;
+    while ((codeMatch = codePattern.exec(upper)) !== null) codes.push(codeMatch[1]);
     const found = new Set(codes);
     const matchedNames = Object.keys(CN_CURRENCY_NAMES).filter(name => token.includes(name));
     for (const name of matchedNames) {
@@ -186,7 +189,7 @@ function parseAmounts(input) {
     for (const piece of pieces) {
         const currency = detectTokenCurrency(piece, locale.currency) || inheritedCurrency || locale.currency;
         let numberText = piece
-            .replace(new RegExp('\\b(?:' + CODE_PATTERN + ')\\b', 'ig'), '')
+            .replace(new RegExp('(^|[^A-Z0-9_])(?:' + CODE_PATTERN + ')(?=\\s*\\d|\\b)', 'ig'), '$1')
             .replace(/(?:JP|JPN|CN|CNY|HK|HKD|NT|AUD|A|CAD|C|SGD|S|US)\s*(?=[$¥￥])/ig, '')
             .replace(/R\s*\$/ig, '')
             .replace(/[$¥￥€£₹₩₽฿₱₫₺₪₦₴₸₾₼]/g, '');
