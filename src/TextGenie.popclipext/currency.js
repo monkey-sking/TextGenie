@@ -140,7 +140,7 @@ function detectTokenCurrency(token, localeCurrency) {
         else found.add('CNY'); // Conservative, documented fallback for ambiguous yen.
     }
     // A bare dollar sign follows the device locale only when it is a dollar currency.
-    if (token.includes('
+    if (/\$/.test(token) && !/(?:^|[^A-Z0-9])(?:US|HK|NT|A|AUD|C|CAD|S|SGD|R)\s*\$/i.test(token)) {
         const dollarCurrencies = ['USD', 'HKD', 'TWD', 'AUD', 'CAD', 'SGD'];
         found.add(dollarCurrencies.includes(localeCurrency) ? localeCurrency : 'USD');
     }
