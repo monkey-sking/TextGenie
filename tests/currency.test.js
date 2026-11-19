@@ -56,7 +56,12 @@ async function runCurrency(input, targetCurrency = 'USD') {
   const compactUsd = await runCurrency('USD58.83');
   assert.match(compactUsd.output, /58\.83 USD = 58\.83 USD/, 'USD without a separator should parse as US dollars');
   const usDollarSymbol = await runCurrency('US$8.99');
-  assert.match(usDollarSymbol.output, /8\.99 USD = 8\.99 USD/, 'US$ must be recognized as USD, not confused with S
+  assert.match(usDollarSymbol.output, /8\.99 USD = 8\.99 USD/, 'US$ must be recognized as USD, not confused with S$');
+  const spacedUsDollarSymbol = await runCurrency('US $8.99');
+  assert.match(spacedUsDollarSymbol.output, /8\.99 USD = 8\.99 USD/, 'US $ with a space must still be recognized as USD');
+  const singaporeDollarSymbol = await runCurrency('S$8.99');
+  assert.match(singaporeDollarSymbol.output, /8\.99 SGD ≈ 6\.65 USD/, 'standalone S$ must remain Singapore dollars');
+
   const brl = await runCurrency('R$ 100');
   assert.match(brl.output, /100\.00 BRL ≈ 20\.00 USD/, 'R$ should be recognized as Brazilian real, not USD');
   const idrName = await runCurrency('印尼卢比 100');
