@@ -125,8 +125,8 @@ function detectTokenCurrency(token, localeCurrency) {
         { re: /R\s*\$/i, code: 'BRL' },
         { re: /(?:A|AUD)\s*\$/i, code: 'AUD' },
         { re: /(?:C|CAD)\s*\$/i, code: 'CAD' },
-        { re: /(?:S|SGD)\s*\$/i, code: 'SGD' },
-        { re: /US\s*\$/i, code: 'USD' }
+        { re: /(?:^|[^A-Z0-9])(?:S|SGD)\s*\$/i, code: 'SGD' },
+        { re: /(?:^|[^A-Z0-9])US\s*\$/i, code: 'USD' }
     ];
     for (const q of qualified) if (q.re.test(token)) found.add(q.code);
 
@@ -140,7 +140,120 @@ function detectTokenCurrency(token, localeCurrency) {
         else found.add('CNY'); // Conservative, documented fallback for ambiguous yen.
     }
     // A bare dollar sign follows the device locale only when it is a dollar currency.
-    if (token.includes('$') && !/(?:US|HK|NT|A|AUD|C|CAD|S|SGD|R)\s*\$/i.test(token)) {
+    if (token.includes('
+        const dollarCurrencies = ['USD', 'HKD', 'TWD', 'AUD', 'CAD', 'SGD'];
+        found.add(dollarCurrencies.includes(localeCurrency) ? localeCurrency : 'USD');
+    }
+
+    if (found.size > 1) throw new Error('单笔金额中检测到多个币种，请明确写出币种代码，例如 USD 100 或 JP¥3,000。');
+    return found.size ? Array.from(found)[0] : null;
+}
+
+function normalizeAmountNumber(value) {
+    let numberText = value.replace(/[’']/g, '').replace(/[\s\u00A0\u202F]/g, '').replace(/−/g, '-');
+    const hasComma = numberText.includes(',');
+    const hasDot = numberText.includes('.');
+    if (hasComma && hasDot) {
+        const decimalSeparator = numberText.lastIndexOf(',') > numberText.lastIndexOf('.') ? ',' : '.';
+        const groupingSeparator = decimalSeparator === ',' ? '.' : ',';
+        numberText = numberText.split(groupingSeparator).join('');
+        if (decimalSeparator === ',') numberText = numberText.replace(',', '.');
+    } else if (hasComma) {
+        const groups = numberText.split(',');
+        if (groups.length > 1 && groups.slice(1).every(group => group.length === 3)) {
+            numberText = groups.join('');
+        } else if (groups.length === 2 && groups[1].length > 0) {
+            numberText = groups[0] + '.' + groups[1];
+        }
+    } else if (hasDot) {
+        const groups = numberText.split('.');
+        if (groups.length > 2 && groups.slice(1).every(group => group.length === 3)) {
+            numberText = groups.join('');
+        }
+    }
+    return numberText;
+}
+
+function parseAmounts(input) {
+    const locale = getLocaleDefaults();
+    // Remove invisible direction/format controls added by rich-text sources (e.g. ⁦JP¥⁩2,640).
+    const normalizedInput = input.replace(/[\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069\u2060\uFEFF\u00AD\u200B]/g, '');
+    const cleaned = normalizedInput.trim();
+    // The supported expression is a sum separated by +. Currency can be repeated or
+    // inherited from the preceding amount, e.g. $58.83+56.26.
+    const pieces = cleaned.split('+').map(s => s.trim()).filter(Boolean);
+    if (pieces.length === 0) throw new Error('请先选择包含金额的文本。');
+
+    const amounts = [];
+    let inheritedCurrency = null;
+    for (const piece of pieces) {
+        const currency = detectTokenCurrency(piece, locale.currency) || inheritedCurrency || locale.currency;
+        let numberText = piece
+            .replace(new RegExp('(^|[^A-Z0-9_])(?:' + CODE_PATTERN + ')(?=\\s*\\d|\\b)', 'ig'), '$1')
+            .replace(/(?:JP|JPN|CN|CNY|HK|HKD|NT|AUD|A|CAD|C|SGD|S|US)\s*(?=[$¥￥])/ig, '')
+            .replace(/R\s*\$/ig, '')
+            .replace(/[$¥￥€£₹₩₽฿₱₫₺₪₦₴₸₾₼]/g, '');
+        for (const name of Object.keys(CN_CURRENCY_NAMES).sort((a, b) => b.length - a.length)) {
+            numberText = numberText.replaceAll(name, '');
+        }
+        numberText = numberText.replace(/[()\s]/g, '');
+        numberText = normalizeAmountNumber(numberText);
+        if (!/^-?\d+(?:\.\d+)?$/.test(numberText)) {
+            throw new Error('无法识别金额「' + piece + '」。请使用 100 USD、€50、JP¥3,000 等格式。');
+        }
+        const amount = Number(numberText);
+        if (!Number.isFinite(amount)) throw new Error('金额超出可处理范围。');
+        amounts.push({ amount, currency });
+        inheritedCurrency = currency;
+    }
+    return { amounts, locale };
+}
+
+async function getRate(base, target) {
+    if (base === target) return 1;
+    const response = await axios.get('https://api.exchangerate-api.com/v4/latest/' + base, {
+        timeout: HTTP_TIMEOUT_MS,
+        headers: { 'Accept': 'application/json' }
+    });
+    const rates = response.data && response.data.rates;
+    if (!rates || typeof rates[target] !== 'number' || !Number.isFinite(rates[target])) {
+        throw new Error('汇率服务未返回有效汇率（' + base + ' → ' + target + '）。');
+    }
+    return rates[target];
+}
+
+async function convert() {
+    try {
+        const parsed = parseAmounts(text);
+        const target = resolveTargetCurrency();
+        const rates = {};
+        const sources = Array.from(new Set(parsed.amounts.map(x => x.currency)));
+        await Promise.all(sources.map(async source => { rates[source] = await getRate(source, target); }));
+
+        const total = parsed.amounts.reduce((sum, item) => sum + item.amount * rates[item.currency], 0);
+        const formatAmount = value => value.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        const expression = parsed.amounts.map(item =>
+            formatAmount(item.amount) + ' ' + item.currency
+        ).join(' + ');
+        const totalText = formatAmount(total);
+        const relation = sources.length > 1 || sources[0] !== target ? ' ≈ ' : ' = ';
+        return expression + relation + totalText + ' ' + target;
+    } catch (e) {
+        const status = e.response && e.response.status;
+        let message = e.message || '未知错误';
+        if (e.code === 'ECONNABORTED' || e.code === 'ETIMEDOUT') message = '汇率请求超时，请检查网络后重试。';
+        else if (e.code === 'ENOTFOUND' || e.code === 'EAI_AGAIN') message = '无法连接汇率服务，请检查网络或 DNS。';
+        else if (status === 429) message = '汇率服务请求过于频繁，请稍后重试。';
+        else if (status >= 500) message = '汇率服务暂时不可用，请稍后重试。';
+        return '❌ 汇率转换失败：' + message;
+    }
+}
+
+return await convert();
+) && !/(?:^|[^A-Z0-9])(?:US|HK|NT|A|AUD|C|CAD|S|SGD|R)\s*\$/i.test(token)) {
         const dollarCurrencies = ['USD', 'HKD', 'TWD', 'AUD', 'CAD', 'SGD'];
         found.add(dollarCurrencies.includes(localeCurrency) ? localeCurrency : 'USD');
     }
